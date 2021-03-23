@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0 <0.9.0;
  
 
-import "./zbclib.sol";
+import "./iterableFunderMapping.sol";
 //import "./brilliant.sol";
     // uint betPoolAmount;
     // mapping(uint => betPool) betPoolmap;
