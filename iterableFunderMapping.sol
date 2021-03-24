@@ -14,6 +14,9 @@ library IterableFunderMapping {
         uint betHighAmount;
         uint betLowAmount;
     }
+    
+    
+    
 
     //  ii.构造对象（质押池）
     //   一.地址（质押池）
