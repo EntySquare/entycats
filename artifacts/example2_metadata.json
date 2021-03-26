@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.2+commit.661d1103"
+		"version": "0.8.3+commit.8d00100c"
 	},
 	"language": "Solidity",
 	"output": {
@@ -22,6 +22,13 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "contractexample2",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -69,6 +76,32 @@
 						"internalType": "uint256",
 						"name": "last",
 						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "hsfToken",
+				"outputs": [
+					{
+						"internalType": "contract HillStoneFinance",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "maneger",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
 					}
 				],
 				"stateMutability": "view",
@@ -160,12 +193,26 @@
 		"remappings": []
 	},
 	"sources": {
+		"HillStoneFinance.sol": {
+			"keccak256": "0x88793a4ceb43807c46c35f777663aa446558a9cc49c16a27c64db93b1b880def",
+			"urls": [
+				"bzz-raw://aa14f06d4063d6eda57d7847e1b7b0b40626986413a56967a4c13b8f090dc6ae",
+				"dweb:/ipfs/QmUAbKzBueWRZiyFdzNVfydiqp37eLrwXoQKMjGD1rynHW"
+			]
+		},
 		"example2.sol": {
-			"keccak256": "0xf79df092c9f5fb0afa731b7f9f247abe9dba6bc3d13e70a92cb5a88a4c186011",
+			"keccak256": "0x0bb34c75492c1fac09089156cd676e11b72c5f3b95a28eece628feec7f3cf7ea",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://e0f43dab7f5f03001c9871ccf4d835cd29e3b6b54238cc43628a942cf356d5d3",
-				"dweb:/ipfs/QmVWxWvEBBpxfQELzwDGCTiA3uL6kVSmMSBDH5WBeXmvhn"
+				"bzz-raw://4bf30e2389bd16255b415e830ee13eb4b531a8ba937ef453fe424785efd02175",
+				"dweb:/ipfs/QmfQio4vBNVFwSn2Z7FQ1RmNreai6mv2uffSxgeNpXCv9L"
+			]
+		},
+		"safemath.sol": {
+			"keccak256": "0x4ee4d90a49a9a8143be7dd8549c20408619d417031201c2f0b7ca55fffee87ed",
+			"urls": [
+				"bzz-raw://b42d812f940f6e17a59477ca449945a563aa96c6afe2f30842ffcf8b8c9add49",
+				"dweb:/ipfs/QmNSn7zBEWBDyLPcMuWKR8LvRyWDS15qK64udCunPhfCNf"
 			]
 		}
 	},
