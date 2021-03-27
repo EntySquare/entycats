@@ -1,0 +1,143 @@
+{
+	"compiler": {
+		"version": "0.8.3+commit.8d00100c"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"name": "contractManager",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getHighLevelAmount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getLowLevelAmount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "manager",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_betClass",
+						"type": "uint256"
+					}
+				],
+				"name": "placeBet",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "success",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_betClass",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "removeAmount",
+						"type": "uint256"
+					}
+				],
+				"name": "removeBet",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "success",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "payable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"example.sol": "example"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"example.sol": {
+			"keccak256": "0x1917564cc7c10c756448a262693c37b952c5a7109434815c9d1c0b8d27691b28",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://3f38d2c25a24046e53b265dbdc8ebac3a95d80eaf07ffe9becb4b76984721047",
+				"dweb:/ipfs/Qmbtznc1cUdALQz2cfh6ZGUjkYdPqr1ihpgz1e6A1maNHC"
+			]
+		},
+		"iterableFunderMapping.sol": {
+			"keccak256": "0x72dbd1c0f9678cb2e8ab16b77bb0826554c8dd36c9e916d72da74d19e485835c",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://2803120194caa5620420262b0865d349982cbd9b6e30986a42c7dc866f6c5231",
+				"dweb:/ipfs/QmYQDcAUZ4NLuZ5mKAhifyEQt6WL68HVj3ZRNhzm4o13R6"
+			]
+		}
+	},
+	"version": 1
+}

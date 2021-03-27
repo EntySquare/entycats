@@ -164,6 +164,19 @@
 				],
 				"stateMutability": "payable",
 				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "shareOut",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "success",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "payable",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -201,18 +214,18 @@
 			]
 		},
 		"example2.sol": {
-			"keccak256": "0x0bb34c75492c1fac09089156cd676e11b72c5f3b95a28eece628feec7f3cf7ea",
+			"keccak256": "0xf31ecca768b63204c06de7bb38dda22750c9691b8f58b97d6c35440d54487d2f",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://4bf30e2389bd16255b415e830ee13eb4b531a8ba937ef453fe424785efd02175",
-				"dweb:/ipfs/QmfQio4vBNVFwSn2Z7FQ1RmNreai6mv2uffSxgeNpXCv9L"
+				"bzz-raw://8e458a8ee80a6018cee048447ccbe191a6693ff267bf840d3f011612a4dea1a3",
+				"dweb:/ipfs/QmSrWgaVsvPNcCVt9SSzxhyUiZR9Hx7WM25qXsVqVqUhfj"
 			]
 		},
 		"safemath.sol": {
-			"keccak256": "0x4ee4d90a49a9a8143be7dd8549c20408619d417031201c2f0b7ca55fffee87ed",
+			"keccak256": "0x36355dbf216759005d5686fd41252e8245774b2d58a17a0f2e6330773b889410",
 			"urls": [
-				"bzz-raw://b42d812f940f6e17a59477ca449945a563aa96c6afe2f30842ffcf8b8c9add49",
-				"dweb:/ipfs/QmNSn7zBEWBDyLPcMuWKR8LvRyWDS15qK64udCunPhfCNf"
+				"bzz-raw://be1c461ea7f23d486b8d18f3ad3888727aaa8c09efc75c200a26a3d6145b7f28",
+				"dweb:/ipfs/QmRKzqNA3LH6NJ1TdhjjocQkE5cHfQaEKZLHvUE2omX88V"
 			]
 		}
 	},
