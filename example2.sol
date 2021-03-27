@@ -22,7 +22,7 @@ contract example2{
       
     }
     struct betPool {
-        address[] joiners;
+        address[] joiner;
         uint highPool;
         uint lowPool;
     }
@@ -80,7 +80,7 @@ contract example2{
                fundermap[fromAdress].value.funderAddress = fromAdress;
                _pool.lowPool = _pool.lowPool.add(betAmount);
               }
-               _pool.joiners.push(fromAdress);
+               _pool.joiner.push(fromAdress);
              return hsfToken.transferFrom(fromAdress,maneger,betAmount);
         }
     }
@@ -128,19 +128,52 @@ contract example2{
               return hsfToken.transferFrom(maneger,toAddress,removeAmount);
         }
     }
-    function shareOut() public payable returns(bool success){
-        uint count = _pool.joiners.length;
+    function shareOut(uint bounces) public payable returns(bool success){
+        uint count = _pool.joiner.length;
         uint lastBlock = block.number;
         uint timeLength = lastBlock-firstBlock;
+        address[] joiners= _pool.joiner;
+        uint count = joiner.length;
+        uint weightedHighPool;
+        uint weightedLowPool;
         for (
             uint i = 1;
             i <= count;
             i ++
         ) {
-        //   address _address = _pool.joiners[i];
-        // //   if(fundermap[_address].betHighAmount != 0 || fundermap[_address].betLowAmount != 0){
-               
-        // //   }
+           address joinerAddress = joiners[i];
+           blockfunder[] memory separateBets = fundermap[joinerAddress].value.separateBet;
+           uint count2 = separateBets.length;
+             for (
+            uint i = 1;
+            i <= count2;
+            i ++
+            ){
+                weightedHighPool += separateBets[i].betHighAmount.mul(timeLength-separateBets[i].block);
+                weightedLowPool += separateBets[i].betLowAmount.mul(timeLength-separateBets[i].block);
+            }
+        }
+        for (
+            uint i = 1;
+            i <= count;
+            i ++
+        ) {
+           address joinerAddress = joiners[i];
+           blockfunder[] memory separateBets = fundermap[joinerAddress].value.separateBet;
+           uint count2 = separateBets.length;
+           uint weightedHighBet;
+           uint weightedLowBet;
+            for (
+            uint i = 1;
+            i <= count2;
+            i ++
+            ){
+                weightedHighBet += separateBets[i].betHighAmount.mul(timeLength-separateBets[i].block);
+                weightedLowBet += separateBets[i].betLowAmount.mul(timeLength-separateBets[i].block);
+            }
+            uint highShareOutPer = weightedHighBet.div(weightedHighPool);
+            uint lowShareOutPer = weightedLowBet.div(weightedLowPool);
+            uint bounce = bounces.mul(highShareOutPer) + bounces.mul(lowShareOutPer);
         }
     }
     function getHighLevelAmount() public  view returns (uint) {
