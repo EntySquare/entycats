@@ -8,6 +8,17 @@
 			{
 				"inputs": [
 					{
+						"internalType": "uint256",
+						"name": "_startover",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "address",
 						"name": "adkey",
 						"type": "address"
@@ -26,9 +37,15 @@
 			},
 			{
 				"inputs": [],
-				"name": "contractexample2",
-				"outputs": [],
-				"stateMutability": "nonpayable",
+				"name": "firstBlock",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -166,7 +183,13 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "bounces",
+						"type": "uint256"
+					}
+				],
 				"name": "shareOut",
 				"outputs": [
 					{
@@ -176,6 +199,32 @@
 					}
 				],
 				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "startover",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "testToken",
+				"outputs": [
+					{
+						"internalType": "contract TestCoin",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			}
 		],
@@ -213,12 +262,19 @@
 				"dweb:/ipfs/QmUAbKzBueWRZiyFdzNVfydiqp37eLrwXoQKMjGD1rynHW"
 			]
 		},
+		"TestCoin.sol": {
+			"keccak256": "0xc42e0470f42f3dd5945ca7fd1566e220e8c7d35183907fb681f1c82e6afa22ba",
+			"urls": [
+				"bzz-raw://c36233aebd7586476dbabe3c65c26a908c6cd60534b9ecdf9cd76e55cc34af95",
+				"dweb:/ipfs/QmSqdyupbzkD9h8DPa9EJrH5LR58PpuCANdx3CYD96oAoA"
+			]
+		},
 		"example2.sol": {
-			"keccak256": "0xf31ecca768b63204c06de7bb38dda22750c9691b8f58b97d6c35440d54487d2f",
+			"keccak256": "0x51189601babb5094d1e5fbc4ce28ee2a529f86629793b23e61833b1e820879c7",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://8e458a8ee80a6018cee048447ccbe191a6693ff267bf840d3f011612a4dea1a3",
-				"dweb:/ipfs/QmSrWgaVsvPNcCVt9SSzxhyUiZR9Hx7WM25qXsVqVqUhfj"
+				"bzz-raw://1ac27030a80e1dfc3b66014e11e64de58f91346f270c850690bfffeacc741677",
+				"dweb:/ipfs/QmXG5aM8JEHkYv93jSMfcztXkVdBHYJXmAj6SHw6d1JTYe"
 			]
 		},
 		"safemath.sol": {

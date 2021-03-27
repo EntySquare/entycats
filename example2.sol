@@ -1,12 +1,15 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity >=0.8.0 <0.9.0;
 import "./HillStoneFinance.sol";
+import "./TestCoin.sol";
 import "./safemath.sol";
  
 contract example2{
     HillStoneFinance public hsfToken;
+    TestCoin public testToken;
     address public maneger;
     uint public firstBlock ;
+    uint public startover;
     struct IndexValue { 
         uint keyIndex; 
         funder value; 
@@ -29,16 +32,18 @@ contract example2{
     mapping(address  => IndexValue) fundermap;
     betPool  _pool ;
     uint index ;
-     function contractexample2() public{
+    constructor(uint _startover) public{
        hsfToken = HillStoneFinance(0xaE036c65C649172b43ef7156b009c6221B596B8b); //实例化一个token
        index = 0 ;
-       maneger = 0xaE036c65C649172b43ef7156b009c6221B596B8b;
+       maneger = msg.sender;
        firstBlock = block.number;
+       startover = _startover;
+       
     }
     using SafeMath for uint;
     function placeBet(address fromAdress,uint _betClass,uint betAmount) public payable returns(bool success){
-        if(this.contains(fromAdress)) {
-            if(_betClass == 1){
+        if(this.contains(fromAdress)) { //新增
+            if(_betClass == 1){ //高优先级
                fundermap[fromAdress].value.separateBet.push(blockfunder({
                    betHighAmount : betAmount,
                    betLowAmount : 0,
@@ -47,7 +52,7 @@ contract example2{
                })); 
                _pool.highPool = _pool.highPool.add(betAmount);
               }
-            if(_betClass ==2){
+            if(_betClass ==2){ //低优先级
               fundermap[fromAdress].value.separateBet.push(blockfunder({
                    betHighAmount : 0,
                    betLowAmount : betAmount,
@@ -58,10 +63,10 @@ contract example2{
               }
               return hsfToken.transferFrom(fromAdress,maneger,betAmount);
         }
-        else{
+        else{ //增加下注
             index ++;
             fundermap[fromAdress].keyIndex = index;
-            if(_betClass == 1){
+            if(_betClass == 1){ //高优先级
                 fundermap[fromAdress].value.separateBet.push(blockfunder({
                    betHighAmount : betAmount,
                    betLowAmount : 0,
@@ -71,7 +76,7 @@ contract example2{
                 fundermap[fromAdress].value.funderAddress = fromAdress;
                 _pool.highPool = _pool.highPool.add(betAmount);
               }
-            if(_betClass ==2){
+            if(_betClass ==2){ //低优先级
                 fundermap[fromAdress].value.separateBet.push(blockfunder({
                    betHighAmount : 0,
                    betLowAmount : betAmount,
@@ -85,7 +90,7 @@ contract example2{
         }
     }
     function removeBet(address toAddress,uint _betClass,uint removeAmount) public payable returns(bool success){
-        if(!this.contains(toAddress)) {
+        if(!this.contains(toAddress)) { // 并没有地址
             return false;
         }
         else{
@@ -98,13 +103,14 @@ contract example2{
                          uint i = count;
                          i >= 1;
                          i --
-                       ) {
-                        if(separateBets[i].betHighAmount <= removeAmount){
-                            delete separateBets[i];
+                       ) { //循环该地址
+                        if(separateBets[i].betHighAmount <= removeAmount){ //如果本次下注不足以抵扣则删除本次
                             removeAmount -= separateBets[i].betHighAmount;
+                            delete separateBets[i]; 
                         }
-                        else{
+                        else{ //如果足够以抵扣则结束
                             separateBets[i].betHighAmount -=removeAmount;
+                            return success;
                         }
                    }
              }
@@ -117,11 +123,12 @@ contract example2{
                          i --
                        ) {
                         if(separateBets[i].betLowAmount <= removeAmount){
-                            delete separateBets[i];
                             removeAmount -= separateBets[i].betLowAmount;
+                            delete separateBets[i];
                         }
                         else{
                             separateBets[i].betLowAmount -=removeAmount;
+                            return success;
                         }
                    }
               }
@@ -129,52 +136,54 @@ contract example2{
         }
     }
     function shareOut(uint bounces) public payable returns(bool success){
-        uint count = _pool.joiner.length;
-        uint lastBlock = block.number;
+        uint lastBlock = block.number; // 结算时区块高度
         uint timeLength = lastBlock-firstBlock;
-        address[] joiners= _pool.joiner;
-        uint count = joiner.length;
-        uint weightedHighPool;
-        uint weightedLowPool;
+        address[] memory joiners= _pool.joiner; //参与者地址数列
+        uint weightedHighPool; // 加权高优先级
+        uint weightedLowPool; // 加权低优先级
+       
+        //取得加权池
         for (
             uint i = 1;
-            i <= count;
+            i <= joiners.length;
             i ++
         ) {
            address joinerAddress = joiners[i];
            blockfunder[] memory separateBets = fundermap[joinerAddress].value.separateBet;
-           uint count2 = separateBets.length;
              for (
-            uint i = 1;
-            i <= count2;
-            i ++
+            uint j = 1;
+            j <= separateBets.length;
+            j ++
             ){
-                weightedHighPool += separateBets[i].betHighAmount.mul(timeLength-separateBets[i].block);
-                weightedLowPool += separateBets[i].betLowAmount.mul(timeLength-separateBets[i].block);
+                weightedHighPool += separateBets[j].betHighAmount.mul(lastBlock.sub(separateBets[j].block));
+                weightedLowPool += separateBets[j].betLowAmount.mul(lastBlock.sub(separateBets[j].block));
             }
         }
+        //循环遍历所有funder
         for (
             uint i = 1;
-            i <= count;
+            i <= joiners.length;
             i ++
         ) {
            address joinerAddress = joiners[i];
            blockfunder[] memory separateBets = fundermap[joinerAddress].value.separateBet;
-           uint count2 = separateBets.length;
            uint weightedHighBet;
            uint weightedLowBet;
             for (
-            uint i = 1;
-            i <= count2;
-            i ++
+            uint j = 1;
+            j <= separateBets.length;
+            j ++
             ){
-                weightedHighBet += separateBets[i].betHighAmount.mul(timeLength-separateBets[i].block);
-                weightedLowBet += separateBets[i].betLowAmount.mul(timeLength-separateBets[i].block);
+                //当前地址的加权下注
+                weightedHighBet += separateBets[j].betHighAmount.mul(timeLength-separateBets[j].block);
+                weightedLowBet += separateBets[j].betLowAmount.mul(timeLength-separateBets[j].block);
             }
-            uint highShareOutPer = weightedHighBet.div(weightedHighPool);
-            uint lowShareOutPer = weightedLowBet.div(weightedLowPool);
-            uint bounce = bounces.mul(highShareOutPer) + bounces.mul(lowShareOutPer);
+            if(weightedHighBet != 0 || weightedLowBet != 0){
+            uint bounce = bounces.mul(weightedHighBet.div(weightedHighPool)) + bounces.mul(weightedLowBet.div(weightedLowPool));
+            testToken.transferFrom(maneger,joinerAddress,bounce);
+            }
         }
+        return success;
     }
     function getHighLevelAmount() public  view returns (uint) {
             return _pool.highPool;

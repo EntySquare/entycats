@@ -272,7 +272,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"HillStoneFinance.sol": "HillStoneFinance"
+			"TestCoin.sol": "TestCoin"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -286,12 +286,11 @@
 		"remappings": []
 	},
 	"sources": {
-		"HillStoneFinance.sol": {
-			"keccak256": "0x2dfd3c568ea6b5eb43c4b3cde6fe0c8df21bc30671cdc1e0141575ba82803ec7",
-			"license": "GPL-3.0",
+		"TestCoin.sol": {
+			"keccak256": "0xc42e0470f42f3dd5945ca7fd1566e220e8c7d35183907fb681f1c82e6afa22ba",
 			"urls": [
-				"bzz-raw://64083fdc08968e13a0db21423ed03736e2c7aca1c83ec35d1aaccbb9b0180e80",
-				"dweb:/ipfs/QmYPT9m1cddrQBTFGhXtuuKPwo7KJvPvqxX7AyiXL4Re7p"
+				"bzz-raw://c36233aebd7586476dbabe3c65c26a908c6cd60534b9ecdf9cd76e55cc34af95",
+				"dweb:/ipfs/QmSqdyupbzkD9h8DPa9EJrH5LR58PpuCANdx3CYD96oAoA"
 			]
 		}
 	},
