@@ -46,9 +46,8 @@ contract example2{
     using SafeMath for uint;
     function placeBet(address fromAdress,uint _betClass,uint betAmount) external payable returns(bool){
         if(this.contains(fromAdress)) {  //增加下注 
-           blockfunder[] storage separateBets = fundermap[fromAdress].value.separateBet;
             if(_betClass == 1){ //高优先级
-              separateBets.push(blockfunder({
+              fundermap[fromAdress].value.separateBet.push(blockfunder({
                    betHighAmount : betAmount,
                    betLowAmount : 0,
                    block : block.number
@@ -58,7 +57,7 @@ contract example2{
                 _pool.highPool = _pool.highPool.add(betAmount);
               }
             if(_betClass ==2){ //低优先级
-                separateBets.push(blockfunder({
+                fundermap[fromAdress].value.separateBet.push(blockfunder({
                    betHighAmount : 0,
                    betLowAmount : betAmount,
                    block : block.number
@@ -102,8 +101,7 @@ contract example2{
             return false;
         }
         else{
-            blockfunder[] storage separateBets = fundermap[toAddress].value.separateBet;
-            uint count = separateBets.length;
+            uint count = fundermap[toAddress].value.separateBet.length;
              if(_betClass == 1){
                uint last =  this.getValue(toAddress,1);
                require(last >= removeAmount);
@@ -113,12 +111,12 @@ contract example2{
                          i >= 0;
                          i --
                        ) { //循环该地址
-                        if(separateBets[i].betHighAmount <= removeAmount){ //如果本次下注不足以抵扣则删除本次
-                            removeAmount -= separateBets[i].betHighAmount;
-                            separateBets[i].betHighAmount = 0; 
+                        if(fundermap[toAddress].value.separateBet[i].betHighAmount <= removeAmount){ //如果本次下注不足以抵扣则删除本次
+                            removeAmount -= fundermap[toAddress].value.separateBet[i].betHighAmount;
+                            fundermap[toAddress].value.separateBet[i].betHighAmount = 0; 
                         }
                         else{ //如果足够以抵扣则结束
-                            separateBets[i].betHighAmount -=removeAmount;
+                            fundermap[toAddress].value.separateBet[i].betHighAmount -=removeAmount;
                             return success;
                         }
                    }
@@ -134,12 +132,12 @@ contract example2{
                          i >= 0;
                          i --
                        ) {
-                        if(separateBets[i].betLowAmount <= removeAmount){
-                            removeAmount -= separateBets[i].betLowAmount;
-                            separateBets[i].betLowAmount = 0; 
+                        if(fundermap[toAddress].value.separateBet[i].betLowAmount <= removeAmount){
+                            removeAmount -= fundermap[toAddress].value.separateBet[i].betLowAmount;
+                            fundermap[toAddress].value.separateBet[i].betLowAmount = 0; 
                         }
                         else{
-                            separateBets[i].betLowAmount -=removeAmount;
+                            fundermap[toAddress].value.separateBet[i].betLowAmount -=removeAmount;
                             return success;
                         }
                    }
