@@ -13,4 +13,7 @@ contract testStorageandMemory{
     function getArray(uint num) public view returns (uint result){
         result = array[num];
     }
+    function getLow(uint a,uint b) public view returns (uint result){
+        result = uint(a*10000/b+b/a);
+    }
 }

@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.6.12+commit.27d51765"
+		"version": "0.8.3+commit.8d00100c"
 	},
 	"language": "Solidity",
 	"output": {
@@ -18,7 +18,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"Ierc20.sol": "SafeMath"
+			"safemath.sol": "SafeMath"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -32,11 +32,11 @@
 		"remappings": []
 	},
 	"sources": {
-		"Ierc20.sol": {
-			"keccak256": "0x0414dea88d56d4071be5f160c66092c4724af2f4427f48a54dbf4ea867c518e6",
+		"safemath.sol": {
+			"keccak256": "0x36355dbf216759005d5686fd41252e8245774b2d58a17a0f2e6330773b889410",
 			"urls": [
-				"bzz-raw://c7b31d1194e1f0774c06e85b5d27d9d1cf37ec0391d965bf404314a2887c5db9",
-				"dweb:/ipfs/QmcP79XXLti6sRMa9ezBwizkYqxnhbwZ2LA49Ayjga9ZZr"
+				"bzz-raw://be1c461ea7f23d486b8d18f3ad3888727aaa8c09efc75c200a26a3d6145b7f28",
+				"dweb:/ipfs/QmRKzqNA3LH6NJ1TdhjjocQkE5cHfQaEKZLHvUE2omX88V"
 			]
 		}
 	},

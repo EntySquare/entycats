@@ -6,13 +6,7 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "_startover",
-						"type": "uint256"
-					}
-				],
+				"inputs": [],
 				"stateMutability": "nonpayable",
 				"type": "constructor"
 			},
@@ -31,11 +25,51 @@
 			},
 			{
 				"inputs": [],
-				"name": "getHighLevelAmount",
+				"name": "getMap",
 				"outputs": [
 					{
 						"internalType": "uint256",
-						"name": "",
+						"name": "keyIndex",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "funderAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "length",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "betHighAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "betLowAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "block",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "betHighAmount1",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "betLowAmount1",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "block1",
 						"type": "uint256"
 					}
 				],
@@ -44,117 +78,15 @@
 			},
 			{
 				"inputs": [],
-				"name": "getLowLevelAmount",
+				"name": "getNowBlock",
 				"outputs": [
 					{
 						"internalType": "uint256",
-						"name": "",
+						"name": "_b",
 						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "hsfToken",
-				"outputs": [
-					{
-						"internalType": "contract HillStoneFinance",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "hsfaddress",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "tcaddress",
-						"type": "address"
-					}
-				],
-				"name": "initToken",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "maneger",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "fromAdress",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_betClass",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "betAmount",
-						"type": "uint256"
-					}
-				],
-				"name": "placeBet",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "toAddress",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_betClass",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "removeAmount",
-						"type": "uint256"
-					}
-				],
-				"name": "removeBet",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "success",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "payable",
 				"type": "function"
 			},
 			{
@@ -185,33 +117,28 @@
 						"type": "tuple[]"
 					}
 				],
-				"stateMutability": "payable",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
 				"inputs": [],
-				"name": "startover",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
+				"name": "testPush",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
 				"inputs": [],
-				"name": "tcToken",
-				"outputs": [
-					{
-						"internalType": "contract TestCoin",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
+				"name": "testPush2",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "testPush3",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		],
@@ -228,7 +155,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"example2.sol": "example2"
+			"test1.sol": "example2"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -242,33 +169,18 @@
 		"remappings": []
 	},
 	"sources": {
-		"HillStoneFinance.sol": {
-			"keccak256": "0xed8a107ecb173fe2a754d26158de820beb419a9b531e210dd0411f761fd5052f",
-			"urls": [
-				"bzz-raw://ac3d6a54ba2a01c6b91168b1f78988eb8c4dd860d27c489e77ad9f75ac034be4",
-				"dweb:/ipfs/QmVM6rPa8awbHtd1Cdq21YHGdU5BPJTY8GqDNbj7XGpG8N"
-			]
-		},
-		"TestCoin.sol": {
-			"keccak256": "0xcbb45e649b32c87da4be4de63ef89b53ec2c63ec7a5b6184d9703854968d0dab",
-			"urls": [
-				"bzz-raw://473051fa331952f08f0f6c65eb7a8af3f45580868f648981ab30b9909876d21f",
-				"dweb:/ipfs/Qmbfu3KiJB38vpB56KyQj86sTRPm46eftdhD7mCU1VJ4Sm"
-			]
-		},
-		"example2.sol": {
-			"keccak256": "0x03018d99ac10a61d39f6e82402faf54352cc0fd76c84b475beed6eddc885655d",
-			"license": "GPL-3.0",
-			"urls": [
-				"bzz-raw://8383ae6c4b42c67742af66e08161f1c6b1838d5044fe892df10f040da8075bad",
-				"dweb:/ipfs/QmPi1bcydseYicgnzdS9hGjNsZJxRnzAcZiUocKjucZP2j"
-			]
-		},
 		"safemath.sol": {
 			"keccak256": "0x36355dbf216759005d5686fd41252e8245774b2d58a17a0f2e6330773b889410",
 			"urls": [
 				"bzz-raw://be1c461ea7f23d486b8d18f3ad3888727aaa8c09efc75c200a26a3d6145b7f28",
 				"dweb:/ipfs/QmRKzqNA3LH6NJ1TdhjjocQkE5cHfQaEKZLHvUE2omX88V"
+			]
+		},
+		"test1.sol": {
+			"keccak256": "0x1e8e87e090bd84615046245d26791b52596816464263a8ae6c0dd5ccd874d364",
+			"urls": [
+				"bzz-raw://ce5085016fc12c1a0192e007716ca82a678b15232daed8f5bd4d99fb2770f7d0",
+				"dweb:/ipfs/QmedSuVq1DEWTQNKgpsVHnKqFrMDqWwUgomnkuDEsJv169"
 			]
 		}
 	},
