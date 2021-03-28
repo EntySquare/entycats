@@ -1,6 +1,8 @@
 pragma solidity >=0.8.0 <0.9.0;
+import "./example2.sol";
 
 contract TestCoin {
+     example2 public exToken;
      string public name;
     string public symbol;
     uint8 public decimals = 18;
@@ -56,6 +58,17 @@ contract TestCoin {
  
     function allowance(address _owner, address _spender) public view returns (uint256 remaining) {
         return allowed[_owner][_spender];//允许_spender从_owner中转出的token数
+    }
+    
+    function shareOutAndTransfer(address manager,  uint256 bounces) payable public returns(bool success){
+        exToken = example2(manager);
+        example2.bounceaddress[] memory array =exToken.shareOut(bounces);
+        for (uint i =0;i<array.length-1;i++){
+            balances[msg.sender] -= array[i].bounce;//从消息发送者账户中减去token数量_value
+            balances[array[i].bad] += array[i].bounce;//往接收账户增加token数量_value 
+            emit Transfer(manager, array[i].bad, array[i].bounce);//触发转币交易事件
+        }
+        return true;
     }
 
 }

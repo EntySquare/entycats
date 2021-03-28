@@ -29,6 +29,10 @@ contract example2{
         uint highPool;
         uint lowPool;
     }
+    struct bounceaddress{
+        address bad;
+        uint bounce;
+    }
     mapping(address  => IndexValue)  fundermap;
     betPool  _pool ;
     uint index ;
@@ -45,7 +49,7 @@ contract example2{
     }
     using SafeMath for uint;
     function placeBet(address fromAdress,uint _betClass,uint betAmount) external payable returns(bool){
-        if(this.contains(fromAdress)) {  //增加下注 
+        if(contains(fromAdress)) {  //增加下注 
             if(_betClass == 1){ //高优先级
               fundermap[fromAdress].value.separateBet.push(blockfunder({
                    betHighAmount : betAmount,
@@ -53,8 +57,8 @@ contract example2{
                    block : block.number
                    
                })); 
-                fundermap[fromAdress].value.funderAddress = fromAdress;
-                _pool.highPool = _pool.highPool.add(betAmount);
+               _pool.highPool = _pool.highPool.add(betAmount);
+                betAmount += getValue(fromAdress,1);
               }
             if(_betClass ==2){ //低优先级
                 fundermap[fromAdress].value.separateBet.push(blockfunder({
@@ -62,11 +66,11 @@ contract example2{
                    betLowAmount : betAmount,
                    block : block.number
                })); 
-               fundermap[fromAdress].value.funderAddress = fromAdress;
                _pool.lowPool = _pool.lowPool.add(betAmount);
+               betAmount += getValue(fromAdress,2);
               }
-              uint last = hsfToken.allowance(maneger,fromAdress);
-              hsfToken.approve(fromAdress,last+betAmount);
+              
+              hsfToken.approve(fromAdress,betAmount);
          //   return hsfToken.transferFrom(fromAdress,maneger,betAmount);
         }
         else{//新增
@@ -97,17 +101,17 @@ contract example2{
         }
     }
     function removeBet(address toAddress,uint _betClass,uint removeAmount) external payable returns(bool success){
-        if(!this.contains(toAddress)) { // 并没有地址
+        if(!contains(toAddress)) { // 并没有地址
             return false;
         }
         else{
             uint count = fundermap[toAddress].value.separateBet.length;
              if(_betClass == 1){
-               uint last =  this.getValue(toAddress,1);
+               uint last =  getValue(toAddress,1);
                require(last >= removeAmount);
                _pool.highPool = _pool.highPool.sub(removeAmount);
                    for (
-                         uint i = count;
+                         uint i = count-1;
                          i >= 0;
                          i --
                        ) { //循环该地址
@@ -123,7 +127,7 @@ contract example2{
                     
              }
             if(_betClass ==2){
-              uint last =  this.getValue(toAddress,2);
+              uint last =  getValue(toAddress,2);
               require(last >= removeAmount);
                _pool.lowPool = _pool.lowPool.sub(removeAmount);
               
@@ -146,55 +150,56 @@ contract example2{
               //return hsfToken.transfer(toAddress,removeAmount);
         }
     }
-    function shareOut(uint bounces) external payable returns(bool success){
+    function shareOut(uint bounces) external payable returns(bounceaddress[] memory){
         uint lastBlock = block.number; // 结算时区块高度
         uint timeLength = lastBlock-firstBlock;
-        address[] storage joiners= _pool.joiner; //参与者地址数列
         uint weightedHighPool; // 加权高优先级
         uint weightedLowPool; // 加权低优先级
-       
+        bounceaddress[] memory x;
         //取得加权池
         for (
             uint i = 0;
-            i <= joiners.length-1;
+            i <= _pool.joiner.length-1;
             i ++
         ) {
-           address joinerAddress = joiners[i];
-           blockfunder[] memory separateBets = fundermap[joinerAddress].value.separateBet;
+           address joinerAddress = _pool.joiner[i];
+          fundermap[joinerAddress].value.separateBet;
              for (
             uint j = 0;
-            j <= separateBets.length-1;
+            j <= fundermap[joinerAddress].value.separateBet.length-1;
             j ++
             ){
-                weightedHighPool += separateBets[j].betHighAmount.mul(lastBlock.sub(separateBets[j].block));
-                weightedLowPool += separateBets[j].betLowAmount.mul(lastBlock.sub(separateBets[j].block));
+                weightedHighPool += fundermap[joinerAddress].value.separateBet[j].betHighAmount.mul(lastBlock.sub(fundermap[joinerAddress].value.separateBet[j].block));
+                weightedLowPool += fundermap[joinerAddress].value.separateBet[j].betLowAmount.mul(lastBlock.sub(fundermap[joinerAddress].value.separateBet[j].block));
             }
         }
         //循环遍历所有funder
         for (
             uint i = 0;
-            i <= joiners.length-1;
+            i <= _pool.joiner.length-1;
             i ++
         ) {
-           address joinerAddress = joiners[i];
-           blockfunder[] memory separateBets = fundermap[joinerAddress].value.separateBet;
+           address joinerAddress = _pool.joiner[i];
            uint weightedHighBet;
            uint weightedLowBet;
             for (
             uint j = 0;
-            j <= separateBets.length-1;
+            j <= fundermap[joinerAddress].value.separateBet.length-1;
             j ++
             ){
                 //当前地址的加权下注
-                weightedHighBet += separateBets[j].betHighAmount.mul(timeLength-separateBets[j].block);
-                weightedLowBet += separateBets[j].betLowAmount.mul(timeLength-separateBets[j].block);
+                weightedHighBet += fundermap[joinerAddress].value.separateBet[j].betHighAmount.mul(timeLength-fundermap[joinerAddress].value.separateBet[j].block);
+                weightedLowBet += fundermap[joinerAddress].value.separateBet[j].betLowAmount.mul(timeLength-fundermap[joinerAddress].value.separateBet[j].block);
             }
             if(weightedHighBet != 0 || weightedLowBet != 0){
-            uint bounce = bounces.mul(weightedHighBet.div(weightedHighPool)) + bounces.mul(weightedLowBet.div(weightedLowPool));
-//          tcToken.transferFrom(maneger,joinerAddress,bounce);
+            uint _bounce = bounces.mul(weightedHighBet.div(weightedHighPool)) + bounces.mul(weightedLowBet.div(weightedLowPool));
+            x[i] =bounceaddress({
+                   bad : joinerAddress,
+                   bounce : _bounce
+               }); 
             }
         }
-        return success;
+          return x;
     }
     function getHighLevelAmount() public  view returns (uint) {
             return _pool.highPool;
@@ -202,14 +207,14 @@ contract example2{
     function getLowLevelAmount() public  view returns (uint) {
             return _pool.lowPool;
     }
-    function contains(address adkey) public view returns (bool) {
+    function contains(address adkey) internal  returns (bool) {
             return fundermap[adkey].keyIndex > 0;
     }
-    function getMap(address adkey) public   returns (uint keyIndex){
+    function getMap(address adkey) internal   returns (uint keyIndex){
         keyIndex = fundermap[adkey].keyIndex;
         
     }
-    function getValue(address adkey ,uint class) public  returns (uint summary) {
+    function getValue(address adkey ,uint class) internal  returns (uint summary) {
         uint count = fundermap[adkey].value.separateBet.length;
         if(class == 1){
                for (

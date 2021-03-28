@@ -17,25 +17,6 @@
 				"type": "constructor"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "adkey",
-						"type": "address"
-					}
-				],
-				"name": "contains",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [],
 				"name": "firstBlock",
 				"outputs": [
@@ -72,49 +53,6 @@
 					}
 				],
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "adkey",
-						"type": "address"
-					}
-				],
-				"name": "getMap",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "keyIndex",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "adkey",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "class",
-						"type": "uint256"
-					}
-				],
-				"name": "getValue",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "summary",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -230,9 +168,21 @@
 				"name": "shareOut",
 				"outputs": [
 					{
-						"internalType": "bool",
-						"name": "success",
-						"type": "bool"
+						"components": [
+							{
+								"internalType": "address",
+								"name": "bad",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "bounce",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct example2.bounceaddress[]",
+						"name": "",
+						"type": "tuple[]"
 					}
 				],
 				"stateMutability": "payable",
@@ -300,18 +250,18 @@
 			]
 		},
 		"TestCoin.sol": {
-			"keccak256": "0xf0a49fb72621a503e30a6a905f5d0a1d543f8b0c3bb353a07f417973723c8355",
+			"keccak256": "0xcbb45e649b32c87da4be4de63ef89b53ec2c63ec7a5b6184d9703854968d0dab",
 			"urls": [
-				"bzz-raw://cf3ab4eb927ec3486773f62b8baa245f477fdf4fca123541257a06990966a2fa",
-				"dweb:/ipfs/QmcXDizQDvRdxVd1hFzH9H8qq52wtZr9ycp9NXi34A6fM5"
+				"bzz-raw://473051fa331952f08f0f6c65eb7a8af3f45580868f648981ab30b9909876d21f",
+				"dweb:/ipfs/Qmbfu3KiJB38vpB56KyQj86sTRPm46eftdhD7mCU1VJ4Sm"
 			]
 		},
 		"example2.sol": {
-			"keccak256": "0x274480650f4e02918fb4725fd86f781c82766cef832c73cfa0dcdef246b7f88e",
+			"keccak256": "0x03018d99ac10a61d39f6e82402faf54352cc0fd76c84b475beed6eddc885655d",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://b1284cd8e752538808bdef09ab55ac131b3644bfdd6eb6e44cbae69cc5887e39",
-				"dweb:/ipfs/QmVwA83xRp4CZBPTXrET5uxARHsdiUiFsxRUPWggghCgio"
+				"bzz-raw://8383ae6c4b42c67742af66e08161f1c6b1838d5044fe892df10f040da8075bad",
+				"dweb:/ipfs/QmPi1bcydseYicgnzdS9hGjNsZJxRnzAcZiUocKjucZP2j"
 			]
 		},
 		"safemath.sol": {
