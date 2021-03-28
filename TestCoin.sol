@@ -6,7 +6,8 @@ contract TestCoin {
     uint8 public decimals = 18;
     uint256 public totalSupply;
     address public owner;
-    
+    mapping (address => uint256) balances;
+    mapping (address => mapping (address => uint256)) allowed;
      event Transfer(address owner,address spender,uint256 value);
      event Approval(address owner,address spender,uint256 value);
      /* Initializes contract with initial supply tokens to the creator of the contract */
@@ -20,7 +21,7 @@ contract TestCoin {
         owner = holder;
     }
  
-    function transfer(address _to, uint256 _value) public returns (bool success) {
+    function transfer(address _to, uint256 _value) public payable returns (bool success) {
  
  
         require(balances[msg.sender] >= _value && balances[_to] + _value > balances[_to]);
@@ -31,7 +32,7 @@ contract TestCoin {
     }
  
  
-    function transferFrom(address _from, address _to, uint256 _value) public returns 
+    function transferFrom(address _from, address _to, uint256 _value) payable public returns 
     (bool success) {
         require(balances[_from] >= _value && allowed[_from][msg.sender] >= _value);
         balances[_to] += _value;//接收账户增加token数量_value
@@ -40,7 +41,7 @@ contract TestCoin {
         emit Transfer(_from, _to, _value);//触发转币交易事件
         return true;
     }
-    function balanceOf(address _owner) public  returns (uint256 balance) {
+    function balanceOf(address _owner) public view returns (uint256 balance) {
         return balances[_owner];
     }
  
@@ -53,9 +54,7 @@ contract TestCoin {
         return true;
     }
  
-    function allowance(address _owner, address _spender) public  returns (uint256 remaining) {
+    function allowance(address _owner, address _spender) public view returns (uint256 remaining) {
         return allowed[_owner][_spender];//允许_spender从_owner中转出的token数
     }
-    mapping (address => uint256) balances;
-    mapping (address => mapping (address => uint256)) allowed;
 }

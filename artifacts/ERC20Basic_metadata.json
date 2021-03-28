@@ -1,21 +1,26 @@
 {
 	"compiler": {
-		"version": "0.8.2+commit.661d1103"
+		"version": "0.6.12+commit.27d51765"
 	},
 	"language": "Solidity",
 	"output": {
 		"abi": [
 			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
 				"anonymous": false,
 				"inputs": [
 					{
-						"indexed": false,
+						"indexed": true,
 						"internalType": "address",
-						"name": "owner",
+						"name": "tokenOwner",
 						"type": "address"
 					},
 					{
-						"indexed": false,
+						"indexed": true,
 						"internalType": "address",
 						"name": "spender",
 						"type": "address"
@@ -23,7 +28,7 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "value",
+						"name": "tokens",
 						"type": "uint256"
 					}
 				],
@@ -34,21 +39,21 @@
 				"anonymous": false,
 				"inputs": [
 					{
-						"indexed": false,
+						"indexed": true,
 						"internalType": "address",
-						"name": "owner",
+						"name": "from",
 						"type": "address"
 					},
 					{
-						"indexed": false,
+						"indexed": true,
 						"internalType": "address",
-						"name": "spender",
+						"name": "to",
 						"type": "address"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "value",
+						"name": "tokens",
 						"type": "uint256"
 					}
 				],
@@ -59,12 +64,12 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_owner",
+						"name": "owner",
 						"type": "address"
 					},
 					{
 						"internalType": "address",
-						"name": "_spender",
+						"name": "delegate",
 						"type": "address"
 					}
 				],
@@ -72,23 +77,23 @@
 				"outputs": [
 					{
 						"internalType": "uint256",
-						"name": "remaining",
+						"name": "",
 						"type": "uint256"
 					}
 				],
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_spender",
+						"name": "delegate",
 						"type": "address"
 					},
 					{
 						"internalType": "uint256",
-						"name": "_value",
+						"name": "numTokens",
 						"type": "uint256"
 					}
 				],
@@ -96,7 +101,7 @@
 				"outputs": [
 					{
 						"internalType": "bool",
-						"name": "success",
+						"name": "",
 						"type": "bool"
 					}
 				],
@@ -107,7 +112,7 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_owner",
+						"name": "tokenOwner",
 						"type": "address"
 					}
 				],
@@ -115,11 +120,11 @@
 				"outputs": [
 					{
 						"internalType": "uint256",
-						"name": "balance",
+						"name": "",
 						"type": "uint256"
 					}
 				],
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -136,21 +141,16 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "initialSupply",
-						"type": "uint256"
-					},
+				"inputs": [],
+				"name": "getmsgsender",
+				"outputs": [
 					{
 						"internalType": "address",
-						"name": "holder",
+						"name": "",
 						"type": "address"
 					}
 				],
-				"name": "initCoin",
-				"outputs": [],
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -161,19 +161,6 @@
 						"internalType": "string",
 						"name": "",
 						"type": "string"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "owner",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
 					}
 				],
 				"stateMutability": "view",
@@ -209,12 +196,12 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_to",
+						"name": "receiver",
 						"type": "address"
 					},
 					{
 						"internalType": "uint256",
-						"name": "_value",
+						"name": "numTokens",
 						"type": "uint256"
 					}
 				],
@@ -222,7 +209,7 @@
 				"outputs": [
 					{
 						"internalType": "bool",
-						"name": "success",
+						"name": "",
 						"type": "bool"
 					}
 				],
@@ -233,17 +220,17 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_from",
+						"name": "owner",
 						"type": "address"
 					},
 					{
 						"internalType": "address",
-						"name": "_to",
+						"name": "buyer",
 						"type": "address"
 					},
 					{
 						"internalType": "uint256",
-						"name": "_value",
+						"name": "numTokens",
 						"type": "uint256"
 					}
 				],
@@ -251,7 +238,7 @@
 				"outputs": [
 					{
 						"internalType": "bool",
-						"name": "success",
+						"name": "",
 						"type": "bool"
 					}
 				],
@@ -272,7 +259,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"brilliant.sol": "brilliant"
+			"Ierc20.sol": "ERC20Basic"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -286,11 +273,11 @@
 		"remappings": []
 	},
 	"sources": {
-		"brilliant.sol": {
-			"keccak256": "0xf19b30bd04e39956c3f0a6263de0305b7f0ef7606d6eca89db1cd93dcb5c460b",
+		"Ierc20.sol": {
+			"keccak256": "0x0414dea88d56d4071be5f160c66092c4724af2f4427f48a54dbf4ea867c518e6",
 			"urls": [
-				"bzz-raw://e89ddab4b9eae215fc401a9a6b1117113ef59fe4df1561520acd5f085a7a3dc4",
-				"dweb:/ipfs/QmNuYuUXNQGVxSa6f5X4kMhs6orfFNxFeyHYJyzpW6vvpn"
+				"bzz-raw://c7b31d1194e1f0774c06e85b5d27d9d1cf37ec0391d965bf404314a2887c5db9",
+				"dweb:/ipfs/QmcP79XXLti6sRMa9ezBwizkYqxnhbwZ2LA49Ayjga9ZZr"
 			]
 		}
 	},

@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.3+commit.8d00100c"
+		"version": "0.6.12+commit.27d51765"
 	},
 	"language": "Solidity",
 	"output": {
@@ -9,13 +9,13 @@
 				"anonymous": false,
 				"inputs": [
 					{
-						"indexed": false,
+						"indexed": true,
 						"internalType": "address",
 						"name": "owner",
 						"type": "address"
 					},
 					{
-						"indexed": false,
+						"indexed": true,
 						"internalType": "address",
 						"name": "spender",
 						"type": "address"
@@ -34,15 +34,15 @@
 				"anonymous": false,
 				"inputs": [
 					{
-						"indexed": false,
+						"indexed": true,
 						"internalType": "address",
-						"name": "owner",
+						"name": "from",
 						"type": "address"
 					},
 					{
-						"indexed": false,
+						"indexed": true,
 						"internalType": "address",
-						"name": "spender",
+						"name": "to",
 						"type": "address"
 					},
 					{
@@ -59,12 +59,12 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_owner",
+						"name": "owner",
 						"type": "address"
 					},
 					{
 						"internalType": "address",
-						"name": "_spender",
+						"name": "spender",
 						"type": "address"
 					}
 				],
@@ -72,23 +72,23 @@
 				"outputs": [
 					{
 						"internalType": "uint256",
-						"name": "remaining",
+						"name": "",
 						"type": "uint256"
 					}
 				],
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_spender",
+						"name": "spender",
 						"type": "address"
 					},
 					{
 						"internalType": "uint256",
-						"name": "_value",
+						"name": "amount",
 						"type": "uint256"
 					}
 				],
@@ -96,7 +96,7 @@
 				"outputs": [
 					{
 						"internalType": "bool",
-						"name": "success",
+						"name": "",
 						"type": "bool"
 					}
 				],
@@ -107,7 +107,7 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_owner",
+						"name": "account",
 						"type": "address"
 					}
 				],
@@ -115,52 +115,8 @@
 				"outputs": [
 					{
 						"internalType": "uint256",
-						"name": "balance",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "decimals",
-				"outputs": [
-					{
-						"internalType": "uint8",
 						"name": "",
-						"type": "uint8"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "initialSupply",
 						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "holder",
-						"type": "address"
-					}
-				],
-				"name": "initCoin",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "name",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
 					}
 				],
 				"stateMutability": "view",
@@ -168,25 +124,12 @@
 			},
 			{
 				"inputs": [],
-				"name": "owner",
+				"name": "getmsgsender",
 				"outputs": [
 					{
 						"internalType": "address",
 						"name": "",
 						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "symbol",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
 					}
 				],
 				"stateMutability": "view",
@@ -209,12 +152,12 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_to",
+						"name": "recipient",
 						"type": "address"
 					},
 					{
 						"internalType": "uint256",
-						"name": "_value",
+						"name": "amount",
 						"type": "uint256"
 					}
 				],
@@ -222,7 +165,7 @@
 				"outputs": [
 					{
 						"internalType": "bool",
-						"name": "success",
+						"name": "",
 						"type": "bool"
 					}
 				],
@@ -233,17 +176,17 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_from",
+						"name": "sender",
 						"type": "address"
 					},
 					{
 						"internalType": "address",
-						"name": "_to",
+						"name": "recipient",
 						"type": "address"
 					},
 					{
 						"internalType": "uint256",
-						"name": "_value",
+						"name": "amount",
 						"type": "uint256"
 					}
 				],
@@ -251,7 +194,7 @@
 				"outputs": [
 					{
 						"internalType": "bool",
-						"name": "success",
+						"name": "",
 						"type": "bool"
 					}
 				],
@@ -272,7 +215,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"TestCoin.sol": "TestCoin"
+			"Ierc20.sol": "IERC20"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -286,11 +229,11 @@
 		"remappings": []
 	},
 	"sources": {
-		"TestCoin.sol": {
-			"keccak256": "0xc42e0470f42f3dd5945ca7fd1566e220e8c7d35183907fb681f1c82e6afa22ba",
+		"Ierc20.sol": {
+			"keccak256": "0x0414dea88d56d4071be5f160c66092c4724af2f4427f48a54dbf4ea867c518e6",
 			"urls": [
-				"bzz-raw://c36233aebd7586476dbabe3c65c26a908c6cd60534b9ecdf9cd76e55cc34af95",
-				"dweb:/ipfs/QmSqdyupbzkD9h8DPa9EJrH5LR58PpuCANdx3CYD96oAoA"
+				"bzz-raw://c7b31d1194e1f0774c06e85b5d27d9d1cf37ec0391d965bf404314a2887c5db9",
+				"dweb:/ipfs/QmcP79XXLti6sRMa9ezBwizkYqxnhbwZ2LA49Ayjga9ZZr"
 			]
 		}
 	},

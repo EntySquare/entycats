@@ -112,6 +112,24 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "hsfaddress",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "tcaddress",
+						"type": "address"
+					}
+				],
+				"name": "initToken",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "maneger",
 				"outputs": [
@@ -216,7 +234,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "testToken",
+				"name": "tcToken",
 				"outputs": [
 					{
 						"internalType": "contract TestCoin",
@@ -256,25 +274,25 @@
 	},
 	"sources": {
 		"HillStoneFinance.sol": {
-			"keccak256": "0x88793a4ceb43807c46c35f777663aa446558a9cc49c16a27c64db93b1b880def",
+			"keccak256": "0xeee20f31aeab15ef079be8c22b19af672edf26fe3ac2476422d6c3b66db185f8",
 			"urls": [
-				"bzz-raw://aa14f06d4063d6eda57d7847e1b7b0b40626986413a56967a4c13b8f090dc6ae",
-				"dweb:/ipfs/QmUAbKzBueWRZiyFdzNVfydiqp37eLrwXoQKMjGD1rynHW"
+				"bzz-raw://43501e085be18b7326028b591bf186565197589798cc221dbbc1ce81d163d740",
+				"dweb:/ipfs/QmQKnNit5E3h64vNmQhP9YcvURyy4vS3d45MyfHDtoNHF7"
 			]
 		},
 		"TestCoin.sol": {
-			"keccak256": "0xc42e0470f42f3dd5945ca7fd1566e220e8c7d35183907fb681f1c82e6afa22ba",
+			"keccak256": "0x31fc92db454acff1a2c96dfbc94aa1faa9a253e228a2015e47f2197f1586bb19",
 			"urls": [
-				"bzz-raw://c36233aebd7586476dbabe3c65c26a908c6cd60534b9ecdf9cd76e55cc34af95",
-				"dweb:/ipfs/QmSqdyupbzkD9h8DPa9EJrH5LR58PpuCANdx3CYD96oAoA"
+				"bzz-raw://902db33f93994ea3433e9b045dbbad29f4962249ed3feccc05a2e5c7c10410ed",
+				"dweb:/ipfs/QmZRZE6mrwyG5NHDk7LjD6bv6Gt9VfnvipSma4ZFHY2KRV"
 			]
 		},
 		"example2.sol": {
-			"keccak256": "0x51189601babb5094d1e5fbc4ce28ee2a529f86629793b23e61833b1e820879c7",
+			"keccak256": "0x85776ecdbe624dad68a5def15bb94ab56da592a339b19e02dec9aed8ef57af6a",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://1ac27030a80e1dfc3b66014e11e64de58f91346f270c850690bfffeacc741677",
-				"dweb:/ipfs/QmXG5aM8JEHkYv93jSMfcztXkVdBHYJXmAj6SHw6d1JTYe"
+				"bzz-raw://fd7b3c77f1f34f0ddecb67bcd72a16fc3e8ce4be3434e59ab566d7c6df0817c6",
+				"dweb:/ipfs/QmZRQSAbt2u7Gpoew4bCTwrokx9ek9KPVf3VrWh9FB3dn6"
 			]
 		},
 		"safemath.sol": {

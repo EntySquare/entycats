@@ -6,7 +6,7 @@ import "./safemath.sol";
  
 contract example2{
     HillStoneFinance public hsfToken;
-    TestCoin public testToken;
+    TestCoin public tcToken;
     address public maneger;
     uint public firstBlock ;
     uint public startover;
@@ -33,15 +33,18 @@ contract example2{
     betPool  _pool ;
     uint index ;
     constructor(uint _startover) public{
-       hsfToken = HillStoneFinance(0xaE036c65C649172b43ef7156b009c6221B596B8b); //实例化一个token
        index = 0 ;
-       maneger = msg.sender;
        firstBlock = block.number;
        startover = _startover;
        
     }
+    function initToken  (address hsfaddress,address tcaddress) public{
+        hsfToken = HillStoneFinance(hsfaddress);
+        tcToken = TestCoin(tcaddress);
+        maneger = address(this);
+    }
     using SafeMath for uint;
-    function placeBet(address fromAdress,uint _betClass,uint betAmount) public payable returns(bool success){
+    function placeBet(address fromAdress,uint _betClass,uint betAmount) external payable returns(bool success){
         if(this.contains(fromAdress)) { //新增
             if(_betClass == 1){ //高优先级
                fundermap[fromAdress].value.separateBet.push(blockfunder({
@@ -61,7 +64,8 @@ contract example2{
                _pool.lowPool = _pool.lowPool.add(betAmount);
               
               }
-              return hsfToken.transferFrom(fromAdress,maneger,betAmount);
+              hsfToken.approve(fromAdress,betAmount);
+         //   return hsfToken.transferFrom(fromAdress,maneger,betAmount);
         }
         else{ //增加下注
             index ++;
@@ -86,10 +90,11 @@ contract example2{
                _pool.lowPool = _pool.lowPool.add(betAmount);
               }
                _pool.joiner.push(fromAdress);
-             return hsfToken.transferFrom(fromAdress,maneger,betAmount);
+               hsfToken.approve(fromAdress,betAmount);
+               //return hsfToken.transferFrom(fromAdress,maneger,betAmount);
         }
     }
-    function removeBet(address toAddress,uint _betClass,uint removeAmount) public payable returns(bool success){
+    function removeBet(address toAddress,uint _betClass,uint removeAmount) external payable returns(bool success){
         if(!this.contains(toAddress)) { // 并没有地址
             return false;
         }
@@ -113,6 +118,7 @@ contract example2{
                             return success;
                         }
                    }
+                    _pool.highPool = _pool.highPool.sub(removeAmount);
              }
             if(_betClass ==2){
               uint last =  this.getValue(toAddress,2);
@@ -131,11 +137,12 @@ contract example2{
                             return success;
                         }
                    }
+                _pool.lowPool = _pool.lowPool.sub(removeAmount);
               }
-              return hsfToken.transferFrom(maneger,toAddress,removeAmount);
+              //return hsfToken.transfer(toAddress,removeAmount);
         }
     }
-    function shareOut(uint bounces) public payable returns(bool success){
+    function shareOut(uint bounces) external payable returns(bool success){
         uint lastBlock = block.number; // 结算时区块高度
         uint timeLength = lastBlock-firstBlock;
         address[] memory joiners= _pool.joiner; //参与者地址数列
@@ -180,7 +187,7 @@ contract example2{
             }
             if(weightedHighBet != 0 || weightedLowBet != 0){
             uint bounce = bounces.mul(weightedHighBet.div(weightedHighPool)) + bounces.mul(weightedLowBet.div(weightedLowPool));
-            testToken.transferFrom(maneger,joinerAddress,bounce);
+            tcToken.transferFrom(maneger,joinerAddress,bounce);
             }
         }
         return success;
