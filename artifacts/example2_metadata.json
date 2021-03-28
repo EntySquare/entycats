@@ -80,6 +80,25 @@
 						"internalType": "address",
 						"name": "adkey",
 						"type": "address"
+					}
+				],
+				"name": "getMap",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "keyIndex",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "adkey",
+						"type": "address"
 					},
 					{
 						"internalType": "uint256",
@@ -91,11 +110,11 @@
 				"outputs": [
 					{
 						"internalType": "uint256",
-						"name": "last",
+						"name": "summary",
 						"type": "uint256"
 					}
 				],
-				"stateMutability": "view",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -164,7 +183,7 @@
 				"outputs": [
 					{
 						"internalType": "bool",
-						"name": "success",
+						"name": "",
 						"type": "bool"
 					}
 				],
@@ -274,25 +293,25 @@
 	},
 	"sources": {
 		"HillStoneFinance.sol": {
-			"keccak256": "0xeee20f31aeab15ef079be8c22b19af672edf26fe3ac2476422d6c3b66db185f8",
+			"keccak256": "0xed8a107ecb173fe2a754d26158de820beb419a9b531e210dd0411f761fd5052f",
 			"urls": [
-				"bzz-raw://43501e085be18b7326028b591bf186565197589798cc221dbbc1ce81d163d740",
-				"dweb:/ipfs/QmQKnNit5E3h64vNmQhP9YcvURyy4vS3d45MyfHDtoNHF7"
+				"bzz-raw://ac3d6a54ba2a01c6b91168b1f78988eb8c4dd860d27c489e77ad9f75ac034be4",
+				"dweb:/ipfs/QmVM6rPa8awbHtd1Cdq21YHGdU5BPJTY8GqDNbj7XGpG8N"
 			]
 		},
 		"TestCoin.sol": {
-			"keccak256": "0x31fc92db454acff1a2c96dfbc94aa1faa9a253e228a2015e47f2197f1586bb19",
+			"keccak256": "0xf0a49fb72621a503e30a6a905f5d0a1d543f8b0c3bb353a07f417973723c8355",
 			"urls": [
-				"bzz-raw://902db33f93994ea3433e9b045dbbad29f4962249ed3feccc05a2e5c7c10410ed",
-				"dweb:/ipfs/QmZRZE6mrwyG5NHDk7LjD6bv6Gt9VfnvipSma4ZFHY2KRV"
+				"bzz-raw://cf3ab4eb927ec3486773f62b8baa245f477fdf4fca123541257a06990966a2fa",
+				"dweb:/ipfs/QmcXDizQDvRdxVd1hFzH9H8qq52wtZr9ycp9NXi34A6fM5"
 			]
 		},
 		"example2.sol": {
-			"keccak256": "0x85776ecdbe624dad68a5def15bb94ab56da592a339b19e02dec9aed8ef57af6a",
+			"keccak256": "0x274480650f4e02918fb4725fd86f781c82766cef832c73cfa0dcdef246b7f88e",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://fd7b3c77f1f34f0ddecb67bcd72a16fc3e8ce4be3434e59ab566d7c6df0817c6",
-				"dweb:/ipfs/QmZRQSAbt2u7Gpoew4bCTwrokx9ek9KPVf3VrWh9FB3dn6"
+				"bzz-raw://b1284cd8e752538808bdef09ab55ac131b3644bfdd6eb6e44cbae69cc5887e39",
+				"dweb:/ipfs/QmVwA83xRp4CZBPTXrET5uxARHsdiUiFsxRUPWggghCgio"
 			]
 		},
 		"safemath.sol": {

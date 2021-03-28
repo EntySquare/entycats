@@ -57,4 +57,5 @@ contract TestCoin {
     function allowance(address _owner, address _spender) public view returns (uint256 remaining) {
         return allowed[_owner][_spender];//允许_spender从_owner中转出的token数
     }
+
 }
