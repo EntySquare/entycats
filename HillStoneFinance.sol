@@ -22,7 +22,7 @@ contract HillStoneFinance {
         name = "hillstonefinance";                                      // Set the name for display purposes
         symbol = "HSF";                                  // Set the symbol for display purposes
         owner = holder;
-        exToken = example2(example);
+       
     }
  
     function transfer(address _to, uint256 _value) public payable returns (bool success) {
@@ -67,6 +67,7 @@ contract HillStoneFinance {
         balances[msg.sender] -= _value;//从消息发送者账户中减去token数量_value
         balances[manager] += _value;//往接收账户增加token数量_value
         emit Transfer(msg.sender, manager, _value);//触发转币交易事件
+        exToken = example2(manager);
         exToken.placeBet(msg.sender,_class,_value);
         return true;
     }
@@ -76,6 +77,7 @@ contract HillStoneFinance {
         balances[manager] -= _value; //支出账户_from减去token数量_value
         allowed[manager][msg.sender] -= _value;//消息发送者可以从账户_from中转出的数量减少_value
         emit Transfer(manager, msg.sender, _value);//触发转币交易事件
+        exToken = example2(manager);
         exToken.removeBet(manager,_class,_value);
         return true;
     }

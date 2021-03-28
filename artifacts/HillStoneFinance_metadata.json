@@ -363,10 +363,10 @@
 	},
 	"sources": {
 		"HillStoneFinance.sol": {
-			"keccak256": "0xeee20f31aeab15ef079be8c22b19af672edf26fe3ac2476422d6c3b66db185f8",
+			"keccak256": "0xd73360b0aae15a074be6e78f0683e8e2072c336ace94284456f35238c41fb102",
 			"urls": [
-				"bzz-raw://43501e085be18b7326028b591bf186565197589798cc221dbbc1ce81d163d740",
-				"dweb:/ipfs/QmQKnNit5E3h64vNmQhP9YcvURyy4vS3d45MyfHDtoNHF7"
+				"bzz-raw://77a639f472a68830c58d1b96f0f6fb93c648eaedefd8a3168a2bde21568ae440",
+				"dweb:/ipfs/Qmdq4mC6sPQohbZJdy4ZaUSBzXVT9n6HYnt2bsfrGh8yTw"
 			]
 		},
 		"TestCoin.sol": {
@@ -377,11 +377,11 @@
 			]
 		},
 		"example2.sol": {
-			"keccak256": "0x0b03af3a13fa39712d2975c495cb61807f6c15f1fc5afad512c44009a8dc3e64",
+			"keccak256": "0x85776ecdbe624dad68a5def15bb94ab56da592a339b19e02dec9aed8ef57af6a",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://652d223a13ad22cb9fd161d95fece7cf4190fc4195875ae7809d692372f45853",
-				"dweb:/ipfs/QmdpEodGS76CMWf7FXGiXj3qRhnvebKNycqJdpfgy7PkMY"
+				"bzz-raw://fd7b3c77f1f34f0ddecb67bcd72a16fc3e8ce4be3434e59ab566d7c6df0817c6",
+				"dweb:/ipfs/QmZRQSAbt2u7Gpoew4bCTwrokx9ek9KPVf3VrWh9FB3dn6"
 			]
 		},
 		"safemath.sol": {
