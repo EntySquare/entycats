@@ -1,9 +1,9 @@
 pragma solidity >=0.8.0 <0.9.0;
-import "./example2.sol";
+import "./investor.sol";
 
 
 contract HillStoneFinance {
-    example2 public exToken;
+    investor public ivToken;
      string public name;
     string public symbol;
     uint8 public decimals = 18;
@@ -66,8 +66,8 @@ contract HillStoneFinance {
         require(balances[msg.sender] >= _value && balances[manager] + _value > balances[manager]);
         balances[msg.sender] -= _value;//从消息发送者账户中减去token数量_value
         balances[manager] += _value;//往接收账户增加token数量_value
-        exToken = example2(manager);
-        exToken.placeBet(msg.sender,_class,_value);
+        ivToken = investor(manager);
+        ivToken.placeBet(msg.sender,_class,_value);
         emit Transfer(msg.sender, manager, _value);//触发转币交易事件
         return true;
     }
@@ -76,8 +76,8 @@ contract HillStoneFinance {
         balances[msg.sender] += _value;//接收账户增加token数量_value
         balances[manager] -= _value; //支出账户_from减去token数量_value
         allowed[manager][msg.sender] -= _value;//消息发送者可以从账户_from中转出的数量减少_value
-        exToken = example2(manager);
-        exToken.removeBet(msg.sender,_class,_value);
+        ivToken = investor(manager);
+        ivToken.removeBet(msg.sender,_class,_value);
         emit Transfer(manager, msg.sender, _value);//触发转币交易事件
         return true;
     }

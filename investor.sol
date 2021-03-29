@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity >=0.8.0 <0.9.0;
 import "./HillStoneFinance.sol";
-import "./TestCoin.sol";
+import "./USDT.sol";
 import "./safemath.sol";
  
-contract example2{
+contract investor{
     HillStoneFinance public hsfToken;
-    TestCoin public tcToken;
+    USDT public usToken;
     address public maneger;
     uint public firstBlock ;
     uint public startover;
@@ -44,7 +44,7 @@ contract example2{
     }
     function initToken  (address hsfaddress,address tcaddress) public{
         hsfToken = HillStoneFinance(hsfaddress);
-        tcToken = TestCoin(tcaddress);
+        usToken = USDT(tcaddress);
         maneger = address(this);
     }
     using SafeMath for uint;
@@ -168,8 +168,8 @@ contract example2{
             j <= separateBets.length-1;
             j ++
             ){
-                weightedHighPool += separateBets[j].betHighAmount.mul(timeLength);
-                weightedLowPool += separateBets[j].betLowAmount.mul(timeLength);
+                weightedHighPool += separateBets[j].betHighAmount.mul(timeLength * 10);
+                weightedLowPool += separateBets[j].betLowAmount.mul(timeLength * 10);
             }
         }
         //循环遍历所有funder
@@ -198,11 +198,11 @@ contract example2{
             if(weightedLowPool == 0){
                 weightedLowPool = 1;
             }
-            weightedHighBet = weightedHighBet * bounces;
-            weightedLowBet = weightedLowBet * bounces;
+            weightedHighBet = weightedHighBet * bounces * 3;
+            weightedLowBet = weightedLowBet * bounces * 7;
 //             _bounceaddress[i].bounce =  uint(weightedHighBet/weightedHighPool + weightedLowBet/weightedLowPool);
 //             _bounceaddress[i].bad =  joinerAddress2;
-            tcToken.transfer(joinerAddress2,uint(weightedHighBet/weightedHighPool + weightedLowBet/weightedLowPool));
+            usToken.transfer(joinerAddress2,uint(weightedHighBet/weightedHighPool + weightedLowBet/weightedLowPool));
             }
         }
         

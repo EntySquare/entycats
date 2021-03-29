@@ -15,7 +15,7 @@ import "./iterableFunderMapping.sol";
     //   一.生成新的质押人
     //   二.改变目标质押池中的变量
     //   三.highLevel 1 lowLevel 2
-contract example{
+contract exampleItera{
     IterableFunderMapping.itFundermap data;
     struct betPool{
           uint amount;

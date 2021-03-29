@@ -1,8 +1,7 @@
 pragma solidity >=0.8.0 <0.9.0;
-import "./example2.sol";
 
-contract TestCoin {
-     example2 public exToken;
+
+contract USDT {
      string public name;
     string public symbol;
     uint8 public decimals = 18;
@@ -18,8 +17,8 @@ contract TestCoin {
         address holder)  public{
         totalSupply = initialSupply * 10 ** uint256(decimals); // Update total supply
         balances[holder] += totalSupply;                       // Give the creator all initial tokens
-        name = "testcoin";                                      // Set the name for display purposes
-        symbol = "tc";                                  // Set the symbol for display purposes
+        name = "USDT";                                      // Set the name for display purposes
+        symbol = "usdt";                                  // Set the symbol for display purposes
         owner = holder;
     }
  
