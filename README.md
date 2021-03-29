@@ -1,2 +1,2 @@
 # entycats
-contracts of HAP (collection and delievery)
+contracts of HAP (HSF collection and usdt delievery)
