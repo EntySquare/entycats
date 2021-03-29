@@ -64,7 +64,7 @@ contract example2{
                    block : block.number
                    
                })); 
-        _pool.highPool += 20;
+        _pool.highPool += 10;
     }
     function testPush3() public {
         fundermap[address(0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB)].keyIndex = 1 ;
@@ -78,42 +78,11 @@ contract example2{
         _pool.joiner.push(address(0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB));
         _pool.highPool += 10;
     }
-    function getMap() public view returns (uint keyIndex,address funderAddress,uint length,
-    uint betHighAmount,uint betLowAmount,uint block,
-    uint betHighAmount1,uint betLowAmount1,uint block1,
-    uint betHighAmount2,uint betLowAmount2,uint block2) {
-        keyIndex = fundermap[address(this)].keyIndex ;
-        funderAddress = fundermap[address(this)].value.funderAddress ;
-        length =fundermap[address(this)].value.separateBet.length ;
-        betHighAmount =fundermap[address(this)].value.separateBet[0].betHighAmount;
-        betLowAmount =fundermap[address(this)].value.separateBet[0].betLowAmount;
-        block =fundermap[address(this)].value.separateBet[0].block;
-        betHighAmount1 =fundermap[address(this)].value.separateBet[1].betHighAmount;
-        betLowAmount1 =fundermap[address(this)].value.separateBet[1].betLowAmount;
-        block1 =fundermap[address(this)].value.separateBet[1].block;
-        betHighAmount2 =fundermap[address(this)].value.separateBet[2].betHighAmount;
-        betLowAmount2 =fundermap[address(this)].value.separateBet[2].betLowAmount;
-        block2 =fundermap[address(this)].value.separateBet[2].block;
-    }
-    
-    function testPushExist(address adkey,uint betAmount) public  returns (uint needapprove){
-        if(contains(adkey)) {  //增加下注 
-              fundermap[adkey].value.separateBet.push(blockfunder({
-                   betHighAmount : betAmount,
-                   betLowAmount : 0,
-                   block : block.number
-                   
-               })); 
-                _pool.highPool = _pool.highPool.add(betAmount);
-                needapprove =  getValue(adkey,1);
-              }
-    }
-    
     function contains(address adkey) internal  returns (bool) {
             return fundermap[adkey].keyIndex > 0;
     }
     
-    function getValue(address adkey ,uint class) internal  returns (uint summary) {
+    function getValue(address adkey ,uint class) public view returns (uint summary) {
         uint count = fundermap[adkey].value.separateBet.length;
         if(class == 1){
                for (
@@ -133,3 +102,4 @@ contract example2{
         }
     }
 }
+    

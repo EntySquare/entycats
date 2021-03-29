@@ -50,6 +50,7 @@ contract investor{
     using SafeMath for uint;
     function placeBet(address fromAdress,uint _betClass,uint betAmount) external payable returns(bool){
         if(contains(fromAdress)) {  //增加下注 
+            uint needapprove ;
             if(_betClass == 1){ //高优先级
               fundermap[fromAdress].value.separateBet.push(blockfunder({
                    betHighAmount : betAmount,
@@ -58,7 +59,7 @@ contract investor{
                    
                })); 
                _pool.highPool = _pool.highPool.add(betAmount);
-                betAmount += getValue(fromAdress,1);
+               needapprove =  getAllValue(fromAdress);
               }
             if(_betClass ==2){ //低优先级
                 fundermap[fromAdress].value.separateBet.push(blockfunder({
@@ -67,10 +68,9 @@ contract investor{
                    block : block.number
                })); 
                _pool.lowPool = _pool.lowPool.add(betAmount);
-               betAmount += getValue(fromAdress,2);
+               needapprove =  getAllValue(fromAdress);
               }
-              
-              hsfToken.approve(fromAdress,betAmount);
+              hsfToken.approve(fromAdress,needapprove);
          //   return hsfToken.transferFrom(fromAdress,maneger,betAmount);
         }
         else{//新增
@@ -106,6 +106,7 @@ contract investor{
         }
         else{
             uint count = fundermap[toAddress].value.separateBet.length;
+            uint surplus = removeAmount;
              if(_betClass == 1){
                uint last =  getValue(toAddress,1);
                require(last >= removeAmount);
@@ -115,12 +116,12 @@ contract investor{
                          i >= 0;
                          i --
                        ) { //循环该地址
-                        if(fundermap[toAddress].value.separateBet[i].betHighAmount <= removeAmount){ //如果本次下注不足以抵扣则删除本次
-                            removeAmount -= fundermap[toAddress].value.separateBet[i].betHighAmount;
-                            fundermap[toAddress].value.separateBet[i].betHighAmount = 0; 
+                        if(fundermap[toAddress].value.separateBet[i].betHighAmount < surplus){ //如果本次下注不足以抵扣则删除本次
+                            surplus -= fundermap[toAddress].value.separateBet[i].betHighAmount;
+                            fundermap[toAddress].value.separateBet[i].betHighAmount = 0;
                         }
                         else{ //如果足够以抵扣则结束
-                            fundermap[toAddress].value.separateBet[i].betHighAmount -=removeAmount;
+                           fundermap[toAddress].value.separateBet[i].betHighAmount -=surplus; 
                             return success;
                         }
                    }
@@ -136,12 +137,12 @@ contract investor{
                          i >= 0;
                          i --
                        ) {
-                        if(fundermap[toAddress].value.separateBet[i].betLowAmount <= removeAmount){
-                            removeAmount -= fundermap[toAddress].value.separateBet[i].betLowAmount;
+                        if(fundermap[toAddress].value.separateBet[i].betLowAmount < surplus){
+                            surplus -= fundermap[toAddress].value.separateBet[i].betLowAmount;
                             fundermap[toAddress].value.separateBet[i].betLowAmount = 0; 
                         }
                         else{
-                            fundermap[toAddress].value.separateBet[i].betLowAmount -=removeAmount;
+                            fundermap[toAddress].value.separateBet[i].betLowAmount -=surplus;
                             return success;
                         }
                    }
@@ -221,22 +222,33 @@ contract investor{
         
     }
     function getValue(address adkey ,uint class) internal  returns (uint summary) {
-        uint count = fundermap[adkey].value.separateBet.length;
-        if(class == 1){
-               for (
-            uint i = 0;
-            i <= count-1;
-            i ++ ) {
-              summary += fundermap[adkey].value.separateBet[i].betHighAmount;
+            uint count = fundermap[adkey].value.separateBet.length;
+            if(class == 1){
+                   for (
+                uint i = 0;
+                i <= count-1;
+                i ++ ) {
+                  summary += fundermap[adkey].value.separateBet[i].betHighAmount;
+                }
             }
-        }
-        if(class == 2){
-                for (
-            uint i = 0;
-            i <= count-1;
-            i ++ ) {
-              summary += fundermap[adkey].value.separateBet[i].betLowAmount;
+            if(class == 2){
+                    for (
+                uint i = 0;
+                i <= count-1;
+                i ++ ) {
+                  summary += fundermap[adkey].value.separateBet[i].betLowAmount;
+                }
             }
-        }
-        }
+    }
+    function getAllValue(address adkey) internal  returns (uint summary) {
+            uint count = fundermap[adkey].value.separateBet.length;
+            for (
+                uint i = 0;
+                i <= count-1;
+                i ++ ) {
+                  summary += fundermap[adkey].value.separateBet[i].betHighAmount;
+                  summary += fundermap[adkey].value.separateBet[i].betLowAmount;
+                }
+            
+    }
 }

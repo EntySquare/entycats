@@ -52,11 +52,12 @@ contract HillStoneFinance {
  
     function approve(address _spender, uint256 _value) public returns (bool success)   
     { 
-         require((_value == 0) || (allowed[msg.sender][_spender] == 0));
+         require((_value == 0) || (_value >= allowed[msg.sender][_spender]));
         allowed[msg.sender][_spender] = _value;
        emit Approval(msg.sender, _spender, _value);
         return true;
     }
+    
  
     function allowance(address _owner, address _spender) public view returns (uint256 remaining) {
         return allowed[_owner][_spender];//允许_spender从_owner中转出的token数
@@ -80,8 +81,5 @@ contract HillStoneFinance {
         ivToken.removeBet(msg.sender,_class,_value);
         emit Transfer(manager, msg.sender, _value);//触发转币交易事件
         return true;
-    }
-    function shareOutAndBurn(address manager, uint256 _class, uint256 _value) payable public returns(bool success){
-        
     }
 }

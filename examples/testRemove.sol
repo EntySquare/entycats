@@ -39,7 +39,7 @@ contract example2{
        firstBlock = block.number;
        testPush();
        testPush2();
-       testPush3();
+       testPush2();
        
     }
     function getNowBlock() public view returns (uint _b){
@@ -59,56 +59,80 @@ contract example2{
     }
     function testPush2() public {
         fundermap[address(this)].value.separateBet.push(blockfunder({
-                   betHighAmount : 20,
-                   betLowAmount : 0,
-                   block : block.number
-                   
-               })); 
-        _pool.highPool += 20;
-    }
-    function testPush3() public {
-        fundermap[address(0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB)].keyIndex = 1 ;
-        fundermap[address(0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB)].value.funderAddress = address(0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB);
-        fundermap[address(0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB)].value.separateBet.push(blockfunder({
                    betHighAmount : 10,
                    betLowAmount : 0,
                    block : block.number
                    
                })); 
-        _pool.joiner.push(address(0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB));
         _pool.highPool += 10;
     }
-    function getMap() public view returns (uint keyIndex,address funderAddress,uint length,
-    uint betHighAmount,uint betLowAmount,uint block,
-    uint betHighAmount1,uint betLowAmount1,uint block1,
-    uint betHighAmount2,uint betLowAmount2,uint block2) {
+   
+    function getArray(uint i) public view returns (uint keyIndex,address funderAddress,uint length,
+    uint betHighAmount,uint betLowAmount,uint block) {
         keyIndex = fundermap[address(this)].keyIndex ;
         funderAddress = fundermap[address(this)].value.funderAddress ;
         length =fundermap[address(this)].value.separateBet.length ;
-        betHighAmount =fundermap[address(this)].value.separateBet[0].betHighAmount;
-        betLowAmount =fundermap[address(this)].value.separateBet[0].betLowAmount;
-        block =fundermap[address(this)].value.separateBet[0].block;
-        betHighAmount1 =fundermap[address(this)].value.separateBet[1].betHighAmount;
-        betLowAmount1 =fundermap[address(this)].value.separateBet[1].betLowAmount;
-        block1 =fundermap[address(this)].value.separateBet[1].block;
-        betHighAmount2 =fundermap[address(this)].value.separateBet[2].betHighAmount;
-        betLowAmount2 =fundermap[address(this)].value.separateBet[2].betLowAmount;
-        block2 =fundermap[address(this)].value.separateBet[2].block;
+        betHighAmount =fundermap[address(this)].value.separateBet[i].betHighAmount;
+        betLowAmount =fundermap[address(this)].value.separateBet[i].betLowAmount;
+        block =fundermap[address(this)].value.separateBet[i].block;
+
     }
     
-    function testPushExist(address adkey,uint betAmount) public  returns (uint needapprove){
-        if(contains(adkey)) {  //增加下注 
-              fundermap[adkey].value.separateBet.push(blockfunder({
-                   betHighAmount : betAmount,
-                   betLowAmount : 0,
-                   block : block.number
-                   
-               })); 
-                _pool.highPool = _pool.highPool.add(betAmount);
-                needapprove =  getValue(adkey,1);
-              }
+function removeBet(address toAddress,uint removeAmount) public  returns(bool success){
+        if(contains(toAddress)) { // 并没有地址
+            uint count = fundermap[toAddress].value.separateBet.length;
+            uint surplus = removeAmount;
+            uint last =  getValue(toAddress,1);
+               require(last >= removeAmount);
+               _pool.highPool = _pool.highPool.sub(removeAmount);
+                   for (
+                         uint i = count-1;
+                         i >= 0;
+                         i --
+                       ) { //循环该地址
+                        if(fundermap[toAddress].value.separateBet[i].betHighAmount < surplus){ //如果本次下注不足以抵扣则删除本次
+                            surplus -= fundermap[toAddress].value.separateBet[i].betHighAmount;
+                            removeFunderArray(toAddress,i,count);
+                        }
+                        else{ //如果足够以抵扣则结束
+                            fundermap[toAddress].value.separateBet[i].betHighAmount -=surplus;
+                            return success;
+                        }
+                   }
+                    
+             
+              //return hsfToken.transfer(toAddress,removeAmount);
+        }
+    }    
+ 
+ 
+ function removeFunderArray(address _address ,uint removei,uint length) internal{
+     if(removei != length -1){
+         for(uint i = 0;i < length-1;i ++){
+                 if(i==removei){
+                  fundermap[_address].value.separateBet[i] = fundermap[_address].value.separateBet[i+1];
+                 }
+             }
+         
     }
-    
+    delete fundermap[_address].value.separateBet[length-1];
+ }
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
     function contains(address adkey) internal  returns (bool) {
             return fundermap[adkey].keyIndex > 0;
     }

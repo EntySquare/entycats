@@ -251,35 +251,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "manager",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_class",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_value",
-						"type": "uint256"
-					}
-				],
-				"name": "shareOutAndBurn",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "success",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
 				"inputs": [],
 				"name": "symbol",
 				"outputs": [
@@ -387,10 +358,10 @@
 	},
 	"sources": {
 		"HillStoneFinance.sol": {
-			"keccak256": "0x46c09b21cc456b3a215b16f559e5d9f47d18a44f2aa84bed04f57129c37fac4b",
+			"keccak256": "0x2736f7cf61b82830c0e8e29a0fdb0b372f9dd391a7c2d2edab90ac3c808da060",
 			"urls": [
-				"bzz-raw://71718bf34e1b505a6284cda85900c1da3ede72f2fe7a222c5628ffea89cf38d6",
-				"dweb:/ipfs/QmedXc1PJPKBjfvDGQ3JB4S9ask449xtPVtN373NZKT9PP"
+				"bzz-raw://97e21db4598c7124108bab8513941b470212807d87b128ce99fc9ef5d7e6ae0d",
+				"dweb:/ipfs/QmNM3jrfnkZB5xeZLimTcwKjrDtB4RK538pCLTLzJuErNT"
 			]
 		},
 		"USDT.sol": {
@@ -401,11 +372,11 @@
 			]
 		},
 		"investor.sol": {
-			"keccak256": "0x0d657ad21065ed151210a1192b5ee95de8495ebd3145819257af9b57ce159395",
+			"keccak256": "0xe9aa3ca1fb94e18b82da0109daa3502867446fccea63460a4096570ef7435b8d",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://6b2fb9f517f3504cc033a1bb0cb400234f1085d63107f23df2f73160f1ed821f",
-				"dweb:/ipfs/QmNgcnuUEMbUxyLWqdFUhNnpzeWE4gkVWrwZ45ragCHfSC"
+				"bzz-raw://cc1f7f37277f96021f348ea28155ce9170da1e187dd8f4bfe2ca55c8b237b4ac",
+				"dweb:/ipfs/QmeE5CMTej7bavqmhEgDcncropFj3pb3rirKAyujg8uU3M"
 			]
 		},
 		"safemath.sol": {

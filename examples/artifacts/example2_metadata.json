@@ -24,8 +24,14 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "getMap",
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "i",
+						"type": "uint256"
+					}
+				],
+				"name": "getArray",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -56,21 +62,6 @@
 						"internalType": "uint256",
 						"name": "block",
 						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "betHighAmount1",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "betLowAmount1",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "block1",
-						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -92,29 +83,22 @@
 			{
 				"inputs": [
 					{
+						"internalType": "address",
+						"name": "toAddress",
+						"type": "address"
+					},
+					{
 						"internalType": "uint256",
-						"name": "bounces",
+						"name": "removeAmount",
 						"type": "uint256"
 					}
 				],
-				"name": "shareOut",
+				"name": "removeBet",
 				"outputs": [
 					{
-						"components": [
-							{
-								"internalType": "address",
-								"name": "bad",
-								"type": "address"
-							},
-							{
-								"internalType": "uint256",
-								"name": "bounce",
-								"type": "uint256"
-							}
-						],
-						"internalType": "struct example2.bounceaddress[]",
-						"name": "",
-						"type": "tuple[]"
+						"internalType": "bool",
+						"name": "success",
+						"type": "bool"
 					}
 				],
 				"stateMutability": "nonpayable",
@@ -133,13 +117,6 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "testPush3",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -155,7 +132,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"test1.sol": "example2"
+			"examples/testRemove.sol": "example2"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -169,18 +146,18 @@
 		"remappings": []
 	},
 	"sources": {
-		"safemath.sol": {
+		"examples/safemath.sol": {
 			"keccak256": "0x36355dbf216759005d5686fd41252e8245774b2d58a17a0f2e6330773b889410",
 			"urls": [
 				"bzz-raw://be1c461ea7f23d486b8d18f3ad3888727aaa8c09efc75c200a26a3d6145b7f28",
 				"dweb:/ipfs/QmRKzqNA3LH6NJ1TdhjjocQkE5cHfQaEKZLHvUE2omX88V"
 			]
 		},
-		"test1.sol": {
-			"keccak256": "0x58f5282be144199d03062f6babb9a16e8a09710df8151a993d70a3b471f99ea7",
+		"examples/testRemove.sol": {
+			"keccak256": "0x4f317bcb08e6d86691db7f7d5b9ea3c9fa564e95880d52778604c99bfb8192a5",
 			"urls": [
-				"bzz-raw://f5b168e038f4286191c0199ed42bc7ee50435795d35adefce9fa3b39231360fd",
-				"dweb:/ipfs/QmX5JFxdN4T8FgjyQW3grVBFAJ37CFcuNtjp3YF9mXiGgm"
+				"bzz-raw://2def90bc1622aab198ab9a5ebc3fae1d200a50ed001af8a13daa0bff2d1323c6",
+				"dweb:/ipfs/QmNR5muoZ93xve3LnKeNUvJR5Hhid9u5Gmn2b4QyYtXe6B"
 			]
 		}
 	},
