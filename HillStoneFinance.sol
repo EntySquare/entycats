@@ -4,7 +4,7 @@ import "./investor.sol";
 
 contract HillStoneFinance {
     investor public ivToken;
-     string public name;
+    string public name;
     string public symbol;
     uint8 public decimals = 18;
     uint256 public totalSupply;
