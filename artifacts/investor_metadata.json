@@ -11,6 +11,16 @@
 						"internalType": "uint256",
 						"name": "_startover",
 						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "institutionflag",
+						"type": "bool"
+					},
+					{
+						"internalType": "address",
+						"name": "_institution",
+						"type": "address"
 					}
 				],
 				"stateMutability": "nonpayable",
@@ -84,6 +94,32 @@
 				"name": "initToken",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "institution",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "institutionflag",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -239,11 +275,11 @@
 			]
 		},
 		"investor.sol": {
-			"keccak256": "0x5e0b6198a302b0f54d88072eb32a9108223b55944a1f30ec49ee790db8418e02",
+			"keccak256": "0x2bae6bbdb7d4c5db75328e9b80bcbe45dad8c87c6d8ea15b56818d694247df8b",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://340709f67482636492b758df8c7a116551f8b6431c30223d8797d5fc21611a1d",
-				"dweb:/ipfs/QmNvrrRxxQm88a9hvXujU6Ftj2V8ugRNc4H866CBAhwuFg"
+				"bzz-raw://8ae8c94f7960c3bd13cbfac858bc0a1e126983d507129346906d3b1957d58d5c",
+				"dweb:/ipfs/QmW3hiAnqBXYRZnangZbKwYtevGdwRGH8SxrM57YKBkKRx"
 			]
 		},
 		"safemath.sol": {

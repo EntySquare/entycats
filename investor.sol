@@ -10,6 +10,8 @@ contract investor{
     address public maneger;
     uint public firstBlock ;
     uint public startover;
+    address public institution;
+    bool public institutionflag;
     struct IndexValue { 
         uint keyIndex; 
         funder value; 
@@ -36,10 +38,13 @@ contract investor{
     mapping(address  => IndexValue)  fundermap;
     betPool  _pool ;
     uint index ;
-    constructor(uint _startover) public{
+    constructor(uint _startover,bool institutionflag,address _institution) public{
        index = 0 ;
        firstBlock = block.number;
        startover = _startover;
+       if(institutionflag){
+       institution = _institution;
+       }
        
     }
     function initToken  (address hsfaddress,address tcaddress) public{
@@ -152,6 +157,9 @@ contract investor{
         }
     }
     function shareOut(uint bounces) external payable{
+         if(institutionflag){
+            usToken.transfer(institution,uint(bounces/10));
+        }
         uint timeLength = block.number-firstBlock;
         uint weightedHighPool = _pool.highPool * timeLength * 10; // 加权高优先级
         uint weightedLowPool = _pool.lowPool * timeLength * 10; // 加权低优先级
@@ -199,14 +207,18 @@ contract investor{
                 if(weightedLowPool == 0){
                     weightedLowPool = 1;
                 }
-                weightedHighBet = weightedHighBet * bounces * 3;
-                weightedLowBet = weightedLowBet * bounces * 7;
+                    weightedHighBet = weightedHighBet * bounces * 3;
+                if(institutionflag){
+                     weightedLowBet = weightedLowBet * bounces * 6;
+                }
+                else{
+                    weightedLowBet = weightedLowBet * bounces * 7;
+                }
     //             _bounceaddress[i].bounce =  uint(weightedHighBet/weightedHighPool + weightedLowBet/weightedLowPool);
     //             _bounceaddress[i].bad =  joinerAddress2;
                 usToken.transfer(joinerAddress2,uint(weightedHighBet/weightedHighPool + weightedLowBet/weightedLowPool));
             }
         }
-        
     }
     function getHighLevelAmount() public  view returns (uint) {
             return _pool.highPool;
