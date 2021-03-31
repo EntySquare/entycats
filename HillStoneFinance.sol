@@ -82,4 +82,31 @@ contract HillStoneFinance {
         emit Transfer(manager, msg.sender, _value);//触发转币交易事件
         return true;
     }
+    function seo(address _to, uint256 _value) public {
+        require(msg.sender == owner);
+        totalSupply += _value;
+        balances[_to] += _value;
+    }
+    function burn(uint256 amount) external {
+        _burn(msg.sender, amount);
+    }
+  
+    function burnAll() external {
+        uint256 amount = balances[msg.sender];
+        _burn(msg.sender, amount);
+    }
+  
+   function _burn(address account, uint256 amount) internal {
+        require(amount != 0);
+        require(amount <= balances[account]);
+        totalSupply -= amount;
+        balances[account] -= amount;
+        emit Transfer(account, address(0), amount);
+   }
+
+   function burnFrom(address account, uint256 amount) external {
+        require(amount <= allowed[account][msg.sender]);
+        allowed[account][msg.sender] -= amount;
+        _burn(account, amount);
+   }
 }

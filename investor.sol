@@ -43,6 +43,7 @@ contract investor{
        firstBlock = block.number;
        startover = _startover;
        institutionflag = _institutionflag;
+       maneger = msg.sender;
        if(institutionflag){
        institution = _institution;
        }
@@ -51,7 +52,6 @@ contract investor{
     function initToken  (address hsfaddress,address tcaddress) public{
         hsfToken = HillStoneFinance(hsfaddress);
         usToken = USDT(tcaddress);
-        maneger = address(this);
     }
     using SafeMath for uint;
     function placeBet(address fromAdress,uint _betClass,uint betAmount) external payable returns(bool){
@@ -157,69 +157,76 @@ contract investor{
               //return hsfToken.transfer(toAddress,removeAmount);
         }
     }
-    function shareOut(uint bounces) external payable{
+    function shareOut(uint bounces) external onlyManager  payable{
          if(institutionflag){
             usToken.transfer(institution,uint(bounces/10));
         }
         uint timeLength = block.number-firstBlock;
-        uint weightedHighPool = _pool.highPool * timeLength * 10; // 加权高优先级
-        uint weightedLowPool = _pool.lowPool * timeLength * 10; // 加权低优先级
+        // uint weightedHighPool = _pool.highPool * timeLength * 10; // 加权高优先级
+        // uint weightedLowPool = _pool.lowPool * timeLength * 10; // 加权低优先级
+        uint weightedHighPool ; // 加权高优先级
+        uint weightedLowPool ; // 加权低优先级
 //         //取得加权池
-// //        bounceaddress[] memory _bounceaddress = new bounceaddress[](uint256(_pool.joiner.length));
-//         for (
-//             uint i = 0;
-//             i <= _pool.joiner.length-1;
-//             i ++
-//         ) {
-//           address joinerAddress = _pool.joiner[i];
-//           blockfunder[] memory separateBets = fundermap[joinerAddress].value.separateBet;
-//              for (
-//             uint j = 0;
-//             j <= separateBets.length-1;
-//             j ++
-//             ){
-//                 weightedHighPool += separateBets[j].betHighAmount.mul(timeLength * 10);
-//                 weightedLowPool += separateBets[j].betLowAmount.mul(timeLength * 10);
-//             }
-//         }
-        //循环遍历所有funder
         for (
             uint i = 0;
             i <= _pool.joiner.length-1;
             i ++
         ) {
-          address joinerAddress2 = _pool.joiner[i];
-          blockfunder[] memory separateBets2 = fundermap[joinerAddress2].value.separateBet;
-          uint weightedHighBet;
-          uint weightedLowBet;
+          address joinerAddress = _pool.joiner[i];
+          blockfunder[] memory separateBets = fundermap[joinerAddress].value.separateBet;
             for (
             uint j = 0;
-            j <= separateBets2.length-1;
+            j <= separateBets.length-1;
             j ++
             ){
                 //当前地址的加权下注
-                weightedHighBet += separateBets2[j].betHighAmount.mul(block.number-separateBets2[j].block);
-                weightedLowBet += separateBets2[j].betLowAmount.mul(block.number-separateBets2[j].block);
+                weightedHighPool += separateBets[j].betHighAmount.mul(block.number-separateBets[j].block);
+                weightedLowPool += separateBets[j].betLowAmount.mul(block.number-separateBets[j].block);
             }
-            if(weightedHighBet != 0 || weightedLowBet != 0){
+        }
+        //循环遍历所有funder
+        for (
+            uint x = 0;
+            x <= _pool.joiner.length-1;
+            x ++
+        ) {
+          address joinerAddress2 = _pool.joiner[x];
+          blockfunder[] memory separateBets2 = fundermap[joinerAddress2].value.separateBet;
+          uint weightedHighBounces;
+          uint weightedLowBounces;
+            for (
+            uint y = 0;
+            y <= separateBets2.length-1;
+            y ++
+            ){
+                //当前地址的加权下注
+                weightedHighBounces += separateBets2[y].betHighAmount.mul(block.number-separateBets2[y].block);
+                weightedLowBounces += separateBets2[y].betLowAmount.mul(block.number-separateBets2[y].block);
+            }
+            if(weightedHighBounces != 0 || weightedLowBounces != 0){
                 if(weightedHighPool == 0){
                     weightedHighPool = 1;
                 }
                 if(weightedLowPool == 0){
                     weightedLowPool = 1;
                 }
-                    weightedHighBet = weightedHighBet * bounces * 3;
+                    weightedHighBounces = weightedHighBounces * uint(bounces/10) * 3;
                 if(institutionflag){
-                     weightedLowBet = weightedLowBet * bounces * 6;
+                    weightedLowBounces = weightedLowBounces * uint(bounces/10) * 6;
                 }
                 else{
-                    weightedLowBet = weightedLowBet * bounces * 7;
+                    weightedLowBounces = weightedLowBounces * uint(bounces/10) * 7;
                 }
     //             _bounceaddress[i].bounce =  uint(weightedHighBet/weightedHighPool + weightedLowBet/weightedLowPool);
     //             _bounceaddress[i].bad =  joinerAddress2;
-                usToken.transfer(joinerAddress2,uint(weightedHighBet/weightedHighPool + weightedLowBet/weightedLowPool));
+                usToken.transfer(joinerAddress2,uint(weightedHighBounces/weightedHighPool + weightedLowBounces/weightedLowPool));
             }
         }
+        uint256 lastCoin = usToken.balanceOf(address(this));
+        if(lastCoin != 0){
+            usToken.transfer(maneger,lastCoin);
+        }
+        hsfToken.burnAll();
     }
     function getHighLevelAmount() public  view returns (uint) {
             return _pool.highPool;
@@ -263,5 +270,12 @@ contract investor{
                   summary += fundermap[adkey].value.separateBet[i].betLowAmount;
                 }
             
+    }
+    modifier onlyManager() { // 修改器
+        require(
+            msg.sender == maneger,
+            "Only maneger can call this."
+        );
+        _;
     }
 }

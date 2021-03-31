@@ -123,6 +123,44 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "burn",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "burnAll",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "burnFrom",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "decimals",
 				"outputs": [
@@ -251,6 +289,24 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_value",
+						"type": "uint256"
+					}
+				],
+				"name": "seo",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "symbol",
 				"outputs": [
@@ -358,10 +414,10 @@
 	},
 	"sources": {
 		"HillStoneFinance.sol": {
-			"keccak256": "0x2736f7cf61b82830c0e8e29a0fdb0b372f9dd391a7c2d2edab90ac3c808da060",
+			"keccak256": "0xebd279116b5d1abdc9323d9bef1469eeceb2c8dd13ae3b81bc4884e20bb63f6b",
 			"urls": [
-				"bzz-raw://97e21db4598c7124108bab8513941b470212807d87b128ce99fc9ef5d7e6ae0d",
-				"dweb:/ipfs/QmNM3jrfnkZB5xeZLimTcwKjrDtB4RK538pCLTLzJuErNT"
+				"bzz-raw://878fcac3f4971030cc97b29c531e1b2f2f5667c47827bd5620c321e3de65350d",
+				"dweb:/ipfs/QmWmS7K3dPJaWqT94ZU7ruCeo3nuc7RTzFzANfivE1Piyr"
 			]
 		},
 		"USDT.sol": {
@@ -372,11 +428,11 @@
 			]
 		},
 		"investor.sol": {
-			"keccak256": "0xe9aa3ca1fb94e18b82da0109daa3502867446fccea63460a4096570ef7435b8d",
+			"keccak256": "0x6177b56eb85382c04d521f0c9ddec862e9543f74170af52e59aa0c5be2e31538",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://cc1f7f37277f96021f348ea28155ce9170da1e187dd8f4bfe2ca55c8b237b4ac",
-				"dweb:/ipfs/QmeE5CMTej7bavqmhEgDcncropFj3pb3rirKAyujg8uU3M"
+				"bzz-raw://3f0d226229a32339f527bfee37738204b5c0359165354839eece9690bd264636",
+				"dweb:/ipfs/QmUAtRZeB32rS6c5PdgSqLHtyna3v853qvdFiq959KrJCu"
 			]
 		},
 		"safemath.sol": {
