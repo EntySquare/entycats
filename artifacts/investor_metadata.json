@@ -14,7 +14,7 @@
 					},
 					{
 						"internalType": "bool",
-						"name": "institutionflag",
+						"name": "_institutionflag",
 						"type": "bool"
 					},
 					{
@@ -275,11 +275,11 @@
 			]
 		},
 		"investor.sol": {
-			"keccak256": "0x2bae6bbdb7d4c5db75328e9b80bcbe45dad8c87c6d8ea15b56818d694247df8b",
+			"keccak256": "0xeb1be301a8e139f8b51ad4a7f4eea21353b93e858581928dcee8ba899eca1d8c",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://8ae8c94f7960c3bd13cbfac858bc0a1e126983d507129346906d3b1957d58d5c",
-				"dweb:/ipfs/QmW3hiAnqBXYRZnangZbKwYtevGdwRGH8SxrM57YKBkKRx"
+				"bzz-raw://60e282dbe10477fa1a4d65e107abbed10ce7508572e675dfcb49e717fb9b0485",
+				"dweb:/ipfs/QmPWukQnW3FqFRF5eQkYVECxFpoW8Kty9faK6bys39yrCR"
 			]
 		},
 		"safemath.sol": {

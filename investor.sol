@@ -38,10 +38,11 @@ contract investor{
     mapping(address  => IndexValue)  fundermap;
     betPool  _pool ;
     uint index ;
-    constructor(uint _startover,bool institutionflag,address _institution) public{
+    constructor(uint _startover,bool _institutionflag,address _institution) public{
        index = 0 ;
        firstBlock = block.number;
        startover = _startover;
+       institutionflag = _institutionflag;
        if(institutionflag){
        institution = _institution;
        }
