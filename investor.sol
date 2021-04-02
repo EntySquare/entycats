@@ -3,7 +3,8 @@ pragma solidity >=0.8.0 <0.9.0;
 import "./HillStoneFinance.sol";
 import "./USDT.sol";
 import "./safemath.sol";
- 
+// @title 投资者合约
+// @author zhc
 contract investor{
     HillStoneFinance public hsfToken;
     USDT public usToken;
@@ -15,6 +16,7 @@ contract investor{
     struct IndexValue { 
         uint keyIndex; 
         funder value; 
+        bytes32 password;
     }
     struct blockfunder{
         uint betHighAmount;
@@ -31,10 +33,10 @@ contract investor{
         uint highPool;
         uint lowPool;
     }
-    struct bounceaddress{
-        address bad;
-        uint bounce;
-    }
+    // struct bounceaddress{
+    //     address bad;
+    //     uint bounce;
+    // }
     mapping(address  => IndexValue)  fundermap;
     betPool  _pool ;
     uint index ;
@@ -49,15 +51,18 @@ contract investor{
        }
        
     }
+    //@notice 实例化两种币的合约
     function initToken  (address hsfaddress,address tcaddress) public{
         hsfToken = HillStoneFinance(hsfaddress);
         usToken = USDT(tcaddress);
     }
     using SafeMath for uint;
-    function placeBet(address fromAdress,uint _betClass,uint betAmount) external payable returns(bool){
-        if(contains(fromAdress)) {  //增加下注 
+    //@notice 质押方法 
+    function placeBet(address fromAdress,uint _betClass,uint betAmount) external payable returns(bool){ //@param _betClass 高低优先级 1:高优先级，2:低优先级
+        //@notice 增加质押
+        if(contains(fromAdress)) {  
             uint needapprove ;
-            if(_betClass == 1){ //高优先级
+            if(_betClass == 1){ 
               fundermap[fromAdress].value.separateBet.push(blockfunder({
                    betHighAmount : betAmount,
                    betLowAmount : 0,
@@ -67,7 +72,7 @@ contract investor{
                _pool.highPool = _pool.highPool.add(betAmount);
                needapprove =  getAllValue(fromAdress);
               }
-            if(_betClass ==2){ //低优先级
+            if(_betClass ==2){ 
                 fundermap[fromAdress].value.separateBet.push(blockfunder({
                    betHighAmount : 0,
                    betLowAmount : betAmount,
@@ -76,13 +81,15 @@ contract investor{
                _pool.lowPool = _pool.lowPool.add(betAmount);
                needapprove =  getAllValue(fromAdress);
               }
+              //@notice 调用hsf币的授权方法使用户可以随时取消
               hsfToken.approve(fromAdress,needapprove);
-         //   return hsfToken.transferFrom(fromAdress,maneger,betAmount);
         }
-        else{//新增
+        //@notice 第一次加入用户新增
+        //@dev  可考虑第一次授权是否同时设置密码
+        else{
             index ++;
             fundermap[fromAdress].keyIndex = index;
-            if(_betClass == 1){ //高优先级
+            if(_betClass == 1){ 
                 fundermap[fromAdress].value.separateBet.push(blockfunder({
                    betHighAmount : betAmount,
                    betLowAmount : 0,
@@ -92,7 +99,7 @@ contract investor{
                 fundermap[fromAdress].value.funderAddress = fromAdress;
                 _pool.highPool = _pool.highPool.add(betAmount);
               }
-            if(_betClass ==2){ //低优先级
+            if(_betClass ==2){ 
                 fundermap[fromAdress].value.separateBet.push(blockfunder({
                    betHighAmount : 0,
                    betLowAmount : betAmount,
@@ -102,12 +109,14 @@ contract investor{
                _pool.lowPool = _pool.lowPool.add(betAmount);
               }
                _pool.joiner.push(fromAdress);
+               //@notice 调用hsf币的授权方法使用户可以随时取消
                hsfToken.approve(fromAdress,betAmount);
-               //return hsfToken.transferFrom(fromAdress,maneger,betAmount);
         }
     }
-    function removeBet(address toAddress,uint _betClass,uint removeAmount) external payable returns(bool success){
-        if(!contains(toAddress)) { // 并没有地址
+    //@notice 解除质押方法()
+    function removeBet(address toAddress,uint _betClass,uint removeAmount) external payable returns(bool success){//@param _betClass 高低优先级 1:高优先级，2:低优先级
+        //@notice 并没有地址
+        if(!contains(toAddress)) { 
             return false;
         }
         else{
@@ -117,16 +126,19 @@ contract investor{
                uint last =  getValue(toAddress,1);
                require(last >= removeAmount);
                _pool.highPool = _pool.highPool.sub(removeAmount);
+                   //@notice 从后循环该地址的质押数列
                    for (
                          uint i = count-1;
                          i >= 0;
                          i --
-                       ) { //循环该地址
-                        if(fundermap[toAddress].value.separateBet[i].betHighAmount < surplus){ //如果本次下注不足以抵扣则删除本次
+                       ) { 
+                        //@notice 如果本次下注不足以抵扣则删除本次
+                        if(fundermap[toAddress].value.separateBet[i].betHighAmount < surplus){ 
                             surplus -= fundermap[toAddress].value.separateBet[i].betHighAmount;
                             fundermap[toAddress].value.separateBet[i].betHighAmount = 0;
                         }
-                        else{ //如果足够以抵扣则结束
+                        //@notice 如果足够以抵扣则结束
+                        else{ 
                            fundermap[toAddress].value.separateBet[i].betHighAmount -=surplus; 
                             return success;
                         }
@@ -157,8 +169,12 @@ contract investor{
               //return hsfToken.transfer(toAddress,removeAmount);
         }
     }
-    function shareOut(uint bounces) external onlyManager  payable{
-         if(institutionflag){
+     //@notice 分红算法
+     //@dev onlyManager 仅本合约的创建者可调用且需保证合约账户上usdt值须大于bounces
+     //@dev 仅盈利情况需考虑
+    function shareOut(uint bounces) external onlyManager  payable{//@param bounces	投资期结束后所得盈余 
+        //@notice 保荐机构则将利润分与机构固定10%
+        if(institutionflag){
             usToken.transfer(institution,uint(bounces/10));
         }
         uint timeLength = block.number-firstBlock;
@@ -166,7 +182,7 @@ contract investor{
         // uint weightedLowPool = _pool.lowPool * timeLength * 10; // 加权低优先级
         uint weightedHighPool ; // 加权高优先级
         uint weightedLowPool ; // 加权低优先级
-//         //取得加权池
+       //@notice 取得加权后质押池
         for (
             uint i = 0;
             i <= _pool.joiner.length-1;
@@ -179,12 +195,12 @@ contract investor{
             j <= separateBets.length-1;
             j ++
             ){
-                //当前地址的加权下注
+                //@notice 当前地址的加权下注
                 weightedHighPool += separateBets[j].betHighAmount.mul(block.number-separateBets[j].block);
                 weightedLowPool += separateBets[j].betLowAmount.mul(block.number-separateBets[j].block);
             }
         }
-        //循环遍历所有funder
+        //@notice 循环遍历所有投资者账户
         for (
             uint x = 0;
             x <= _pool.joiner.length-1;
@@ -199,11 +215,12 @@ contract investor{
             y <= separateBets2.length-1;
             y ++
             ){
-                //当前地址的加权下注
+                //@notice 当前地址的加权下注
                 weightedHighBounces += separateBets2[y].betHighAmount.mul(block.number-separateBets2[y].block);
                 weightedLowBounces += separateBets2[y].betLowAmount.mul(block.number-separateBets2[y].block);
             }
             if(weightedHighBounces != 0 || weightedLowBounces != 0){
+                //@dev 考虑特殊情况
                 if(weightedHighPool == 0){
                     weightedHighPool = 1;
                 }
@@ -219,29 +236,53 @@ contract investor{
                 }
     //             _bounceaddress[i].bounce =  uint(weightedHighBet/weightedHighPool + weightedLowBet/weightedLowPool);
     //             _bounceaddress[i].bad =  joinerAddress2;
+                //@notice 调用转账方法
                 usToken.transfer(joinerAddress2,uint(weightedHighBounces/weightedHighPool + weightedLowBounces/weightedLowPool));
             }
         }
+        //@dev 向下取值后剩余值转入管理员账户
         uint256 lastCoin = usToken.balanceOf(address(this));
         if(lastCoin != 0){
             usToken.transfer(maneger,lastCoin);
         }
+        //@notice 销毁本合约以使用的hsf货币
         hsfToken.burnAll();
     }
-    function getHighLevelAmount() public  view returns (uint) {
+    //@notice 设置密码
+    function setPassword(bytes32 _password) public returns (bool success){
+        if(!contains(msg.sender)){
+            index ++
+            fundermap[msg.sender].keyIndex = index;
+            fundermap[msg.sender].password = _password;
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    //@notice 查看本人地址质押情况
+    //@dev 尚无下注时间展示
+    function getOwnersBetCondition(address _owner ,bytes32 _password) public view returns (uint highbet,uint lowbet){
+        require(fundermap[_owner].password == _password,"wrong password");
+        highbet = getValue(_owner,1);
+        lowbet = getValue(_owner,2);
+        
+    }
+    //@dev 内部方法方便合约内复用 
+    function getHighLevelAmount() internal  view returns (uint) {
             return _pool.highPool;
     }
-    function getLowLevelAmount() public  view returns (uint) {
+    function getLowLevelAmount() internal  view returns (uint) {
             return _pool.lowPool;
     }
-    function contains(address adkey) internal  returns (bool) {
+    function contains(address adkey) internal view returns (bool) {
             return fundermap[adkey].keyIndex > 0;
     }
-    function getMap(address adkey) internal  returns (uint keyIndex){
+    function getMap(address adkey) internal view returns (uint keyIndex){
         keyIndex = fundermap[adkey].keyIndex;
         
     }
-    function getValue(address adkey ,uint class) internal  returns (uint summary) {
+    function getValue(address adkey ,uint class) internal view returns (uint summary) {
             uint count = fundermap[adkey].value.separateBet.length;
             if(class == 1){
                    for (
@@ -260,7 +301,7 @@ contract investor{
                 }
             }
     }
-    function getAllValue(address adkey) internal  returns (uint summary) {
+    function getAllValue(address adkey) internal view returns (uint summary) {
             uint count = fundermap[adkey].value.separateBet.length;
             for (
                 uint i = 0;
@@ -271,7 +312,8 @@ contract investor{
                 }
             
     }
-    modifier onlyManager() { // 修改器
+    // @notice 修改器
+    modifier onlyManager() { 
         require(
             msg.sender == maneger,
             "Only maneger can call this."

@@ -1,0 +1,82 @@
+{
+	"compiler": {
+		"version": "0.4.26+commit.4563c3fc"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"name": "x",
+						"type": "bytes12"
+					}
+				],
+				"name": "bytes12ToString",
+				"outputs": [
+					{
+						"name": "",
+						"type": "string"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"name": "source",
+						"type": "string"
+					}
+				],
+				"name": "stringTobytes12",
+				"outputs": [
+					{
+						"name": "result",
+						"type": "bytes12"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"methods": {}
+		},
+		"userdoc": {
+			"methods": {
+				"bytes12ToString(bytes12)": {
+					"notice": "bytes12类型转化为string型转"
+				},
+				"stringTobytes12(string)": {
+					"notice": "string类型转化为bytes12型转"
+				}
+			}
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"examples/testByteToString.sol": "testByteToString"
+		},
+		"evmVersion": "byzantium",
+		"libraries": {},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"examples/testByteToString.sol": {
+			"keccak256": "0x99b761f95eb5de9eefc8438698cf384c8736176273d1e7ea262e3e4b2d9e305d",
+			"urls": [
+				"bzzr://b57fc2bf037500ec2e35ec565b4fadacc0fa49a7c8419b4f297787942b04918c"
+			]
+		}
+	},
+	"version": 1
+}

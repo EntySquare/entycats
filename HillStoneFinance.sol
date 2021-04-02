@@ -1,7 +1,8 @@
 pragma solidity >=0.8.0 <0.9.0;
 import "./investor.sol";
 
-
+// @title 投资者合约
+// @author zhc
 contract HillStoneFinance {
     investor public ivToken;
     string public name;
@@ -26,8 +27,6 @@ contract HillStoneFinance {
     }
  
     function transfer(address _to, uint256 _value) public payable returns (bool success) {
- 
- 
         require(balances[msg.sender] >= _value && balances[_to] + _value > balances[_to]);
         balances[msg.sender] -= _value;//从消息发送者账户中减去token数量_value
         balances[_to] += _value;//往接收账户增加token数量_value
@@ -49,12 +48,12 @@ contract HillStoneFinance {
         return balances[_owner];
     }
  
- 
+    //@dev 仅允许消息发送人扩大授权
     function approve(address _spender, uint256 _value) public returns (bool success)   
     { 
-         require((_value == 0) || (_value >= allowed[msg.sender][_spender]));
+        require((_value == 0) || (_value >= allowed[msg.sender][_spender]));
         allowed[msg.sender][_spender] = _value;
-       emit Approval(msg.sender, _spender, _value);
+        emit Approval(msg.sender, _spender, _value);
         return true;
     }
     
@@ -62,8 +61,8 @@ contract HillStoneFinance {
     function allowance(address _owner, address _spender) public view returns (uint256 remaining) {
         return allowed[_owner][_spender];//允许_spender从_owner中转出的token数
     }
-    
-    function placeAndTransfer(address manager,uint256 _class,uint256 _value) payable public returns(bool success){
+    //@notice 转币交易同时影响质押合约
+    function placeAndTransfer(address manager,uint256 _class,uint256 _value) payable public returns(bool success){//@param manager 投资选择的合约地址;_class 1:高优先级，2:低优先级
         require(balances[msg.sender] >= _value && balances[manager] + _value > balances[manager]);
         balances[msg.sender] -= _value;//从消息发送者账户中减去token数量_value
         balances[manager] += _value;//往接收账户增加token数量_value
@@ -72,7 +71,8 @@ contract HillStoneFinance {
         emit Transfer(msg.sender, manager, _value);//触发转币交易事件
         return true;
     }
-    function removeAndTransfer(address manager, uint256 _class, uint256 _value) payable public returns(bool success){
+    //@notice 转币交易同时影响质押合约
+    function removeAndTransfer(address manager, uint256 _class, uint256 _value) payable public returns(bool success){//@param manager 投资选择的合约地址;_class 1:高优先级，2:低优先级
         require(balances[manager] >= _value && allowed[manager][msg.sender] >= _value);
         balances[msg.sender] += _value;//接收账户增加token数量_value
         balances[manager] -= _value; //支出账户_from减去token数量_value
@@ -82,11 +82,13 @@ contract HillStoneFinance {
         emit Transfer(manager, msg.sender, _value);//触发转币交易事件
         return true;
     }
+    //@notice 向符合条件投资人增发
     function seo(address _to, uint256 _value) public {
         require(msg.sender == owner);
         totalSupply += _value;
         balances[_to] += _value;
     }
+    //@notice 销毁
     function burn(uint256 amount) external {
         _burn(msg.sender, amount);
     }

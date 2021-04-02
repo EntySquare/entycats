@@ -66,6 +66,35 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_owner",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_password",
+						"type": "bytes32"
+					}
+				],
+				"name": "getOwnersBetCondition",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "highbet",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "lowbet",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "hsfToken",
 				"outputs": [
@@ -275,11 +304,11 @@
 			]
 		},
 		"investor.sol": {
-			"keccak256": "0x6177b56eb85382c04d521f0c9ddec862e9543f74170af52e59aa0c5be2e31538",
+			"keccak256": "0x9d55b383d3b80533dcae0cb7511ca23fb93c8ad1ef84557be1dbd8991c30a7e0",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://3f0d226229a32339f527bfee37738204b5c0359165354839eece9690bd264636",
-				"dweb:/ipfs/QmUAtRZeB32rS6c5PdgSqLHtyna3v853qvdFiq959KrJCu"
+				"bzz-raw://66a13180fff8efcc0fa2cb90af594f664a0666b1ff61df326aea14785bdaed1c",
+				"dweb:/ipfs/QmZnTCFkXjXDagXSVzwFRvkukATqvxBk9v2eMpzgFRCtdn"
 			]
 		},
 		"safemath.sol": {
