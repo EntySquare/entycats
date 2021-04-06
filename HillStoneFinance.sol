@@ -5,10 +5,10 @@ import "./investor.sol";
 // @author zhc
 contract HillStoneFinance {
     investor public ivToken;
-    string public name;
-    string public symbol;
-    uint8 public decimals = 18;
-    uint256 public totalSupply;
+    string  _name;
+    string  _symbol;
+    uint8  _decimals = 2;
+    uint256  _totalSupply;
     address public owner;
     mapping (address => uint256)  balances;
     mapping (address => mapping (address => uint256))  allowed;
@@ -18,14 +18,26 @@ contract HillStoneFinance {
     function initCoin(
         uint256 initialSupply,
         address holder)  public{
-        totalSupply = initialSupply * 10 ** uint256(decimals); // Update total supply
-        balances[holder] += totalSupply;                       // Give the creator all initial tokens
-        name = "hillstonefinance";                                      // Set the name for display purposes
-        symbol = "HSF";                                  // Set the symbol for display purposes
+        _totalSupply = initialSupply * 10 ** uint256(_decimals); // Update total supply
+        balances[holder] += _totalSupply;                       // Give the creator all initial tokens
+        _name = "hillstonefinance";                                      // Set the name for display purposes
+        _symbol = "HSF";                                  // Set the symbol for display purposes
         owner = holder;
        
     }
- 
+     function name() public view returns (string memory) {
+        return _name;
+    }
+    function symbol() public view returns (string memory){
+        return _symbol;
+    }
+    function decimals() public view returns (uint8){
+        return _decimals;
+    }
+    function totalSupply() public view returns (uint256){
+        return _totalSupply;
+    }
+  
     function transfer(address _to, uint256 _value) public payable returns (bool success) {
         require(balances[msg.sender] >= _value && balances[_to] + _value > balances[_to]);
         balances[msg.sender] -= _value;//从消息发送者账户中减去token数量_value
@@ -85,7 +97,7 @@ contract HillStoneFinance {
     //@notice 向符合条件投资人增发
     function seo(address _to, uint256 _value) public {
         require(msg.sender == owner);
-        totalSupply += _value;
+        _totalSupply += _value;
         balances[_to] += _value;
     }
     //@notice 销毁
@@ -101,7 +113,7 @@ contract HillStoneFinance {
    function _burn(address account, uint256 amount) internal {
         require(amount != 0);
         require(amount <= balances[account]);
-        totalSupply -= amount;
+        _totalSupply -= amount;
         balances[account] -= amount;
         emit Transfer(account, address(0), amount);
    }

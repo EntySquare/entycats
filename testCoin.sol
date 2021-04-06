@@ -1,7 +1,7 @@
 pragma solidity >=0.8.0 <0.9.0;
 
 
-contract USDT {
+contract testCoin {
      string  _name;
     string  _symbol;
     uint8  _decimals = 18;
@@ -17,8 +17,8 @@ contract USDT {
         address holder)  public{
         _totalSupply = initialSupply * 10 ** uint256(_decimals); // Update total supply
         balances[holder] += _totalSupply;                       // Give the creator all initial tokens
-        _name = "USDT";                                      // Set the name for display purposes
-        _symbol = "usdt";                                  // Set the symbol for display purposes
+        _name = "DT";                                      // Set the name for display purposes
+        _symbol = "dt";                                  // Set the symbol for display purposes
         owner = holder;
     }
  
