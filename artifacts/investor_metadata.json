@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.3+commit.8d00100c"
+		"version": "0.8.2+commit.661d1103"
 	},
 	"language": "Solidity",
 	"output": {
@@ -29,32 +29,6 @@
 			{
 				"inputs": [],
 				"name": "firstBlock",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "getHighLevelAmount",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "getLowLevelAmount",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -225,6 +199,25 @@
 			{
 				"inputs": [
 					{
+						"internalType": "bytes32",
+						"name": "_password",
+						"type": "bytes32"
+					}
+				],
+				"name": "setPassword",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "success",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "uint256",
 						"name": "bounces",
 						"type": "uint256"
@@ -290,10 +283,10 @@
 	},
 	"sources": {
 		"HillStoneFinance.sol": {
-			"keccak256": "0xebd279116b5d1abdc9323d9bef1469eeceb2c8dd13ae3b81bc4884e20bb63f6b",
+			"keccak256": "0xba4d96f6dc8e25ac5cb88fe272a1e5b76441a668bed4734624c323b3c8365226",
 			"urls": [
-				"bzz-raw://878fcac3f4971030cc97b29c531e1b2f2f5667c47827bd5620c321e3de65350d",
-				"dweb:/ipfs/QmWmS7K3dPJaWqT94ZU7ruCeo3nuc7RTzFzANfivE1Piyr"
+				"bzz-raw://e609f939c6fbf22fd08fa5c29197c31314087d0115ee1bd5a2ef2a098fece239",
+				"dweb:/ipfs/QmeyKyd1mJ4vDCxPdqpJBnSu5UJNsX7367kR1jAF9xq1Ag"
 			]
 		},
 		"USDT.sol": {
@@ -304,11 +297,11 @@
 			]
 		},
 		"investor.sol": {
-			"keccak256": "0x9d55b383d3b80533dcae0cb7511ca23fb93c8ad1ef84557be1dbd8991c30a7e0",
+			"keccak256": "0x5b8d8f2a2288d90132b75436c605b6865d7c5e2a58037643b571898d8a022975",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://66a13180fff8efcc0fa2cb90af594f664a0666b1ff61df326aea14785bdaed1c",
-				"dweb:/ipfs/QmZnTCFkXjXDagXSVzwFRvkukATqvxBk9v2eMpzgFRCtdn"
+				"bzz-raw://9c5b07b219f661b343d09cd41787b76c2cd297f8e206fb1d7f8e0b8e602bb6a6",
+				"dweb:/ipfs/QmVk3aZv4518zcSyvQHDaTWX3HgPUohHMJ3rH3thNNguFc"
 			]
 		},
 		"safemath.sol": {

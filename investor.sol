@@ -251,7 +251,7 @@ contract investor{
     //@notice 设置密码
     function setPassword(bytes32 _password) public returns (bool success){
         if(!contains(msg.sender)){
-            index ++
+            index ++;
             fundermap[msg.sender].keyIndex = index;
             fundermap[msg.sender].password = _password;
             return true;

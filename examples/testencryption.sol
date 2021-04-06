@@ -14,7 +14,10 @@ contract testencrypt{
         ciphertext = sha256(word);
         result = ciphertext;
     }
+    function encrypt() public view returns (string result){
+        
+    }
     function decrypt() public view returns (string result){
-       
+        
     }
 }
