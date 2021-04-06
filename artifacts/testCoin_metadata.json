@@ -123,44 +123,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "amount",
-						"type": "uint256"
-					}
-				],
-				"name": "burn",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "burnAll",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "account",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "amount",
-						"type": "uint256"
-					}
-				],
-				"name": "burnFrom",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
 				"inputs": [],
 				"name": "decimals",
 				"outputs": [
@@ -193,19 +155,6 @@
 			},
 			{
 				"inputs": [],
-				"name": "ivToken",
-				"outputs": [
-					{
-						"internalType": "contract investor",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "name",
 				"outputs": [
 					{
@@ -215,95 +164,6 @@
 					}
 				],
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "owner",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "manager",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_class",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_value",
-						"type": "uint256"
-					}
-				],
-				"name": "placeAndTransfer",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "success",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "manager",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_class",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_value",
-						"type": "uint256"
-					}
-				],
-				"name": "removeAndTransfer",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "success",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_to",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_value",
-						"type": "uint256"
-					}
-				],
-				"name": "seo",
-				"outputs": [],
-				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -399,7 +259,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"HillStoneFinance.sol": "HillStoneFinance"
+			"testCoin.sol": "testCoin"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -413,33 +273,11 @@
 		"remappings": []
 	},
 	"sources": {
-		"HillStoneFinance.sol": {
-			"keccak256": "0x0c18b2a7662df305a1bd4b712f0ea1e64f593723f654e1d8350b149a4fdce920",
+		"testCoin.sol": {
+			"keccak256": "0x27ecc7f80645e4ccfb85bc505c0ddac8f7dc625f615c6a6ab1396598f7ce4683",
 			"urls": [
-				"bzz-raw://0bef8e3a1f6c5793334e91fa59360c5306253b4d5f39453d8bc7273738dfe692",
-				"dweb:/ipfs/QmcjbLpLDqswzyFRLk9UhEasLDBgg6crKxnkaSPqpNxEK9"
-			]
-		},
-		"USDT.sol": {
-			"keccak256": "0x3621c933045362730ec47ffbbcb0235eaae5c379868a90d723ab2982f1c70f8b",
-			"urls": [
-				"bzz-raw://2698cadd5f6151e621c6c6a5451317919e9bb9fcd46628b87a32e8cc6632d8ce",
-				"dweb:/ipfs/QmToxyEJkvYATu1tBXRCYrBtUmaUp4gBvhVy7KivZi2Xgk"
-			]
-		},
-		"investor.sol": {
-			"keccak256": "0x5b8d8f2a2288d90132b75436c605b6865d7c5e2a58037643b571898d8a022975",
-			"license": "GPL-3.0",
-			"urls": [
-				"bzz-raw://9c5b07b219f661b343d09cd41787b76c2cd297f8e206fb1d7f8e0b8e602bb6a6",
-				"dweb:/ipfs/QmVk3aZv4518zcSyvQHDaTWX3HgPUohHMJ3rH3thNNguFc"
-			]
-		},
-		"safemath.sol": {
-			"keccak256": "0x36355dbf216759005d5686fd41252e8245774b2d58a17a0f2e6330773b889410",
-			"urls": [
-				"bzz-raw://be1c461ea7f23d486b8d18f3ad3888727aaa8c09efc75c200a26a3d6145b7f28",
-				"dweb:/ipfs/QmRKzqNA3LH6NJ1TdhjjocQkE5cHfQaEKZLHvUE2omX88V"
+				"bzz-raw://a2aed87b133a74fe53a00d88237613139f927378e99a1e760a0b110e2cd8c16e",
+				"dweb:/ipfs/QmRWHHXRVUncW6xGj84MisGwDpSycZ4iPQCsgPNQgHp12L"
 			]
 		}
 	},
