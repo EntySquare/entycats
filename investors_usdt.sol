@@ -22,14 +22,11 @@ contract USDT {
         owner = holder;
     }
  
-    function transfer(address _to, uint256 _value) public payable returns (bool success) {
- 
- 
+    function transfer(address _to, uint256 _value) public payable  {
         require(balances[msg.sender] >= _value && balances[_to] + _value > balances[_to]);
         balances[msg.sender] -= _value;//从消息发送者账户中减去token数量_value
         balances[_to] += _value;//往接收账户增加token数量_value
         emit Transfer(msg.sender, _to, _value);//触发转币交易事件
-        return true;
     }
  
  
