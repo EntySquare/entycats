@@ -1,3 +1,17 @@
+// Copyright 2021 The Hillstone Patners 
+// and EntySquare Software Studio
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity >=0.8.0 <0.9.0;
 import "./investors_hsf_token.sol";
@@ -58,6 +72,9 @@ contract investor{
     }
     using SafeMath for uint;
     //@notice 质押方法 
+    //通过遍历参与者判断该发信者是否已经参与了质押，
+    //如果没有质押则添加新的映射并向构造体的数组中记录本次质押。
+    //若已经参与过质押则向该地址对应的映射添加新的质押。
     function placeBet(address fromAdress,uint _betClass,uint betAmount) external payable returns(bool success){ //@param _betClass 高低优先级 1:高优先级，2:低优先级
         //@notice 增加质押
         if(contains(fromAdress)) {  
@@ -115,7 +132,10 @@ contract investor{
                return true;
         }
     }
-    //@notice 解除质押方法()
+    //@notice 解除质押方法 
+    //调用contains方法判断该地址是否曾经参与质押，若没有则返回错误。
+    //如果该地址曾经参与则需判断其相应优先级的质押数量是否够扣除，
+    //判断其满足解除质押条件后从后往前遍历该地址对应映射的质押情况数组，优先扣除后质押的数量直至到达设定参数。
     function removeBet(address toAddress,uint _betClass,uint removeAmount) external payable returns(bool success){//@param _betClass 高低优先级 1:高优先级，2:低优先级
         //@notice 并没有地址
         if(!contains(toAddress)) { 
@@ -173,7 +193,11 @@ contract investor{
     }
      //@notice 分红算法
      //@dev onlyManager 仅本合约的创建者可调用且需保证合约账户上usdt值须大于bounces
-     //@dev 仅盈利情况需考虑
+     //考虑分红算法的触发条件，首先判断本次结算时总额是否大于项目起始资金。
+     //大于则通过遍历参与者数组对每个参与者的质押情况进行汇总加权（保荐机构是否存在做不同的计算）。
+     //计算每个参与者应分得的利润与本金并调用usdt的transfer方法将应得收益发送给参与者。如果总额不够项目起始资金，
+     //则通过判断具体比例按高优先级—>低优先级—>保荐机构（如果存在）分配本金。
+     //分发完成后调用hsf的销毁方法对本次周期的合约收到的质押代币进行销毁。
     function shareOut(uint bounces) external onlyManager  payable{//@param bounces	投资期结束后所得盈余 
             if(bounces > startover){
             //@notice 保荐机构则将利润分与机构固定10%
@@ -319,7 +343,7 @@ contract investor{
         lowbet = getValue(_owner,2);
         
     }
-    //@dev 内部方法方便合约内复用 
+    //@dev 以下内部方法方便合约内复用 
     function getHighLevelAmount() internal  view returns (uint) {
             return _pool.highPool;
     }
