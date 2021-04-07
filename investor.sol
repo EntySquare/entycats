@@ -173,80 +173,129 @@ contract investor{
      //@dev onlyManager 仅本合约的创建者可调用且需保证合约账户上usdt值须大于bounces
      //@dev 仅盈利情况需考虑
     function shareOut(uint bounces) external onlyManager  payable{//@param bounces	投资期结束后所得盈余 
-        //@notice 保荐机构则将利润分与机构固定10%
-        if(institutionflag){
-            usToken.transfer(institution,uint(bounces/10));
-        }
-        uint timeLength = block.number-firstBlock;
-        // uint weightedHighPool = _pool.highPool * timeLength * 10; // 加权高优先级
-        // uint weightedLowPool = _pool.lowPool * timeLength * 10; // 加权低优先级
-        uint weightedHighPool ; // 加权高优先级
-        uint weightedLowPool ; // 加权低优先级
-       //@notice 取得加权后质押池
-        for (
-            uint i = 0;
-            i <= _pool.joiner.length-1;
-            i ++
-        ) {
-          address joinerAddress = _pool.joiner[i];
-          blockfunder[] memory separateBets = fundermap[joinerAddress].value.separateBet;
+            if(bounces > startover){
+            //@notice 保荐机构则将利润分与机构固定10%
+            uint bou_sta = bounces - startover;
+            if(institutionflag){
+                usToken.transfer(institution,uint((bounces)/10));
+            }
+            uint timeLength = block.number-firstBlock;
+            // uint weightedHighPool = _pool.highPool * timeLength * 10; // 加权高优先级
+            // uint weightedLowPool = _pool.lowPool * timeLength * 10; // 加权低优先级
+            uint weightedHighPool ; // 加权高优先级
+            uint weightedLowPool ; // 加权低优先级
+           //@notice 取得加权后质押池
             for (
-            uint j = 0;
-            j <= separateBets.length-1;
-            j ++
-            ){
-                //@notice 当前地址的加权下注
-                weightedHighPool += separateBets[j].betHighAmount.mul(block.number-separateBets[j].block);
-                weightedLowPool += separateBets[j].betLowAmount.mul(block.number-separateBets[j].block);
+                uint i = 0;
+                i <= _pool.joiner.length-1;
+                i ++
+            ) {
+              address joinerAddress = _pool.joiner[i];
+              blockfunder[] memory separateBets = fundermap[joinerAddress].value.separateBet;
+                for (
+                uint j = 0;
+                j <= separateBets.length-1;
+                j ++
+                ){
+                    //@notice 当前地址的加权下注
+                    weightedHighPool += separateBets[j].betHighAmount.mul(block.number-separateBets[j].block);
+                    weightedLowPool += separateBets[j].betLowAmount.mul(block.number-separateBets[j].block);
+                }
+            }
+            //@notice 循环遍历所有投资者账户
+            for (
+                uint x = 0;
+                x <= _pool.joiner.length-1;
+                x ++
+            ) {
+              address joinerAddress2 = _pool.joiner[x];
+              blockfunder[] memory separateBets2 = fundermap[joinerAddress2].value.separateBet;
+              uint weightedHighBounces;
+              uint weightedLowBounces;
+                for (
+                uint y = 0;
+                y <= separateBets2.length-1;
+                y ++
+                ){
+                    //@notice 当前地址的加权下注
+                    weightedHighBounces += separateBets2[y].betHighAmount.mul(block.number-separateBets2[y].block);
+                    weightedLowBounces += separateBets2[y].betLowAmount.mul(block.number-separateBets2[y].block);
+                }
+                if(weightedHighBounces != 0 || weightedLowBounces != 0){
+                    //@dev 考虑特殊情况
+                    if(weightedHighPool == 0){
+                        weightedHighPool = 1;
+                    }
+                    if(weightedLowPool == 0){
+                        weightedLowPool = 1;
+                    }
+                        weightedHighBounces = weightedHighBounces * uint(bou_sta/10) * 3 ;
+                        //@notice  本金分配
+                        uint thisHigh ;
+                        uint thisLow = uint((uint(startover/10) * 3 * getValue(joinerAddress2,2))/_pool.lowPool);
+                    if(institutionflag){
+                        weightedLowBounces = weightedLowBounces * uint(bou_sta/10) * 6;
+                        thisHigh = uint((uint(startover/10) * 6 * getValue(joinerAddress2,1))/_pool.highPool);
+                    }
+                    else{
+                        weightedLowBounces = weightedLowBounces * uint(bou_sta/10) * 7;
+                         thisHigh = uint((uint(startover/10) * 7 * getValue(joinerAddress2,1))/_pool.highPool);
+                    }
+                   
+                    
+        //             _bounceaddress[i].bounce =  uint(weightedHighBet/weightedHighPool + weightedLowBet/weightedLowPool);
+        //             _bounceaddress[i].bad =  joinerAddress2;
+                    //@notice 调用转账方法
+                    usToken.transfer(joinerAddress2,uint(weightedHighBounces/weightedHighPool + weightedLowBounces/weightedLowPool + thisHigh + thisLow));
+                }
+            }
+            //@dev 向下取值后剩余值转入管理员账户
+            uint256 lastCoin = usToken.balanceOf(address(this));
+            if(lastCoin != 0){
+                usToken.transfer(maneger,lastCoin);
             }
         }
-        //@notice 循环遍历所有投资者账户
-        for (
-            uint x = 0;
-            x <= _pool.joiner.length-1;
-            x ++
-        ) {
-          address joinerAddress2 = _pool.joiner[x];
-          blockfunder[] memory separateBets2 = fundermap[joinerAddress2].value.separateBet;
-          uint weightedHighBounces;
-          uint weightedLowBounces;
-            for (
-            uint y = 0;
-            y <= separateBets2.length-1;
-            y ++
-            ){
-                //@notice 当前地址的加权下注
-                weightedHighBounces += separateBets2[y].betHighAmount.mul(block.number-separateBets2[y].block);
-                weightedLowBounces += separateBets2[y].betLowAmount.mul(block.number-separateBets2[y].block);
-            }
-            if(weightedHighBounces != 0 || weightedLowBounces != 0){
-                //@dev 考虑特殊情况
-                if(weightedHighPool == 0){
-                    weightedHighPool = 1;
+        //@dev 本金小于利息
+        else{
+              uint sta_bou = startover - bounces;
+              for (
+                uint m = 0;
+                m <= _pool.joiner.length-1;
+                m ++
+                ) {
+                  if(_pool.highPool != 0 && _pool.lowPool != 0){
+                  address joinerAddress3 = _pool.joiner[m];
+                  uint lastBounces ;
+                  if(institutionflag){
+                    if (sta_bou * 10 <= startover){
+                        lastBounces = uint(startover * 6  * getValue(joinerAddress3,1) /(10 * _pool.highPool)) + uint( startover * 3  * getValue(joinerAddress3,2) /(10 * _pool.lowPool));
+                    } 
+                    else if(sta_bou * 10 <= startover * 4){
+                        lastBounces = uint(startover * 6  * getValue(joinerAddress3,1) /(10 * _pool.highPool)) + uint( (bounces - (startover * 6 / 10)) * (getValue(joinerAddress3,2) / _pool.lowPool));
+                    }
+                    else{
+                        lastBounces = uint(bounces * getValue(joinerAddress3,1) / _pool.highPool); 
+                    }
+                  }
+                  else{
+                    if (sta_bou * 10 <= startover * 3){
+                       lastBounces = uint(startover * 7  * getValue(joinerAddress3,1) /(10 * _pool.highPool)) + uint( (bounces - (startover * 7 / 10)) * (getValue(joinerAddress3,2) / _pool.lowPool)); 
+                    }
+                    else{
+                       lastBounces = uint(bounces * getValue(joinerAddress3,1) / _pool.highPool); 
+                    }
+                  }
+                   usToken.transfer(joinerAddress3,lastBounces);
                 }
-                if(weightedLowPool == 0){
-                    weightedLowPool = 1;
                 }
-                    weightedHighBounces = weightedHighBounces * uint(bounces/10) * 3;
                 if(institutionflag){
-                    weightedLowBounces = weightedLowBounces * uint(bounces/10) * 6;
+                    if (sta_bou * 10 <= startover){
+                     usToken.transfer(institution,uint(bounces - (startover * 9 / 10)));
+                    } 
                 }
-                else{
-                    weightedLowBounces = weightedLowBounces * uint(bounces/10) * 7;
-                }
-    //             _bounceaddress[i].bounce =  uint(weightedHighBet/weightedHighPool + weightedLowBet/weightedLowPool);
-    //             _bounceaddress[i].bad =  joinerAddress2;
-                //@notice 调用转账方法
-                usToken.transfer(joinerAddress2,uint(weightedHighBounces/weightedHighPool + weightedLowBounces/weightedLowPool));
-            }
-        }
-        //@dev 向下取值后剩余值转入管理员账户
-        uint256 lastCoin = usToken.balanceOf(address(this));
-        if(lastCoin != 0){
-            usToken.transfer(maneger,lastCoin);
         }
         //@notice 销毁本合约以使用的hsf货币
-        hsfToken.burnAll();
+            hsfToken.burnAll();
     }
     //@notice 设置密码
     function setPassword(bytes32 _password) public returns (bool success){
