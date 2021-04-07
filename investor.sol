@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity >=0.8.0 <0.9.0;
-import "./HillStoneFinance.sol";
-import "./USDT.sol";
+import "./investors_hsf_token.sol";
+import "./investors_usdt.sol";
 import "./safemath.sol";
 // @title 投资者合约
 // @author zhc
@@ -58,7 +58,7 @@ contract investor{
     }
     using SafeMath for uint;
     //@notice 质押方法 
-    function placeBet(address fromAdress,uint _betClass,uint betAmount) external payable returns(bool){ //@param _betClass 高低优先级 1:高优先级，2:低优先级
+    function placeBet(address fromAdress,uint _betClass,uint betAmount) external payable returns(bool success){ //@param _betClass 高低优先级 1:高优先级，2:低优先级
         //@notice 增加质押
         if(contains(fromAdress)) {  
             uint needapprove ;
@@ -83,6 +83,7 @@ contract investor{
               }
               //@notice 调用hsf币的授权方法使用户可以随时取消
               hsfToken.approve(fromAdress,needapprove);
+              return true;
         }
         //@notice 第一次加入用户新增
         //@dev  可考虑第一次授权是否同时设置密码
@@ -111,6 +112,7 @@ contract investor{
                _pool.joiner.push(fromAdress);
                //@notice 调用hsf币的授权方法使用户可以随时取消
                hsfToken.approve(fromAdress,betAmount);
+               return true;
         }
     }
     //@notice 解除质押方法()
@@ -140,7 +142,7 @@ contract investor{
                         //@notice 如果足够以抵扣则结束
                         else{ 
                            fundermap[toAddress].value.separateBet[i].betHighAmount -=surplus; 
-                            return success;
+                            return true;
                         }
                    }
                     
@@ -161,7 +163,7 @@ contract investor{
                         }
                         else{
                             fundermap[toAddress].value.separateBet[i].betLowAmount -=surplus;
-                            return success;
+                            return true;
                         }
                    }
                
@@ -179,7 +181,7 @@ contract investor{
             if(institutionflag){
                 usToken.transfer(institution,uint((bounces)/10));
             }
-            uint timeLength = block.number-firstBlock;
+            // uint timeLength = block.number-firstBlock;
             // uint weightedHighPool = _pool.highPool * timeLength * 10; // 加权高优先级
             // uint weightedLowPool = _pool.lowPool * timeLength * 10; // 加权低优先级
             uint weightedHighPool ; // 加权高优先级
