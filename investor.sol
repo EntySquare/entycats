@@ -94,7 +94,8 @@ interface IERC20 {
 // @author zhc
 contract investor{
     HillStoneFinance public hsfToken;
-    USDT public usToken;
+   IERC20 public usToken;
+//     USDT public usToken;
     address public maneger;
     uint public firstBlock ;
     uint public startover;
@@ -140,9 +141,9 @@ contract investor{
     }
     //@notice 实例化两种币的合约
     function initToken  (address hsfaddress,address tcaddress) public{
-        hsfToken = HillStoneFinance(hsfaddress);
-//        usToken = USDT(tcaddress);
-        usToken = IERC20(tcaddress);
+      hsfToken = HillStoneFinance(hsfaddress);
+//         usToken = USDT(tcaddress);
+      usToken = IERC20(tcaddress);
     }
     using SafeMath for uint;
     //@notice 质押方法 Pledge method
@@ -371,7 +372,7 @@ contract investor{
                         lastBounces = uint(startover * 6  * getValue(joinerAddress3,1) /(10 * _pool.highPool)) + uint( startover * 3  * getValue(joinerAddress3,2) /(10 * _pool.lowPool));
                     } 
                     else if(sta_bou * 10 <= startover * 4){
-                        lastBounces = uint(startover * 6  * getValue(joinerAddress3,1) /(10 * _pool.highPool)) + uint( (bounces - (startover * 6 / 10)) * (getValue(joinerAddress3,2) / _pool.lowPool));
+                        lastBounces = uint(startover * 6  * getValue(joinerAddress3,1) /(10 * _pool.highPool)) + uint( (bounces - ((startover * 6) / 10)) * (getValue(joinerAddress3,2) / _pool.lowPool));
                     }
                     else{
                         lastBounces = uint(bounces * getValue(joinerAddress3,1) / _pool.highPool); 
@@ -379,7 +380,7 @@ contract investor{
                   }
                   else{
                     if (sta_bou * 10 <= startover * 3){
-                       lastBounces = uint(startover * 7  * getValue(joinerAddress3,1) /(10 * _pool.highPool)) + uint( (bounces - (startover * 7 / 10)) * (getValue(joinerAddress3,2) / _pool.lowPool)); 
+                       lastBounces = uint(startover * 7  * getValue(joinerAddress3,1) /(10 * _pool.highPool)) + uint( (bounces - ((startover * 7) / 10)) * (getValue(joinerAddress3,2) / _pool.lowPool)); 
                     }
                     else{
                        lastBounces = uint(bounces * getValue(joinerAddress3,1) / _pool.highPool); 
@@ -390,7 +391,7 @@ contract investor{
                 }
                 if(institutionflag){
                     if (sta_bou * 10 <= startover){
-                     usToken.transfer(institution,uint(bounces - (startover * 9 / 10)));
+                     usToken.transfer(institution,uint(bounces - ((startover * 9) / 10)));
                     } 
                 }
         }
