@@ -1,5 +1,5 @@
 pragma solidity >=0.8.0 <0.9.0;
-import "./investor.sol";
+import "./investors.sol";
 
 // @title 投资者合约
 // @author zhc

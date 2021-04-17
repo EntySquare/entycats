@@ -16,25 +16,25 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity >=0.8.0 <0.9.0;
 import "./investors_hsf_token.sol";
+import "./investors_usdt.sol";
 import "./safemath.sol";
 
 interface IERC20 {
-    function totalSupply() external view returns (uint256);
+    function totalSupply()  external returns (uint256);
     function balanceOf(address account) external view returns (uint256);
     function transfer(address recipient, uint256 amount) external returns (bool);
     function allowance(address owner, address spender) external view returns (uint256);
     function approve(address spender, uint256 amount) external returns (bool);
     function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
-    event Transfer(address indexed from, address indexed to, uint256 value);
-    event Approval(address indexed owner, address indexed spender, uint256 value);
+    event Transfer(address  owner, address  spender, uint256 value);
+    event Approval(address  owner, address  spender, uint256 value);
 }
-
 // @title 投资者合约
 // @author zhc
 contract investor{
     HillStoneFinance public hsfToken;
-   IERC20 public usToken;
-//     USDT public usToken;
+    IERC20 public usToken;
+//  USDT public usToken;
     address public maneger;
     uint public firstBlock ;
     uint public startover;
@@ -67,7 +67,7 @@ contract investor{
     mapping(address  => IndexValue)  fundermap;
     betPool  _pool ;
     uint index ;
-    constructor(uint _startover,bool _institutionflag,address _institution) public{
+    constructor(uint _startover,bool _institutionflag,address _institution) {
        index = 0 ;
        firstBlock = block.number;
        startover = _startover;
@@ -153,6 +153,7 @@ contract investor{
     function removeBet(address toAddress,uint _betClass,uint removeAmount) external payable returns(bool success){//@param _betClass 高低优先级 1:高优先级，2:低优先级
         //@notice 并没有地址
         if(!contains(toAddress)) { 
+            revert("can not find address");
             return false;
         }
         else{
@@ -160,7 +161,7 @@ contract investor{
             uint surplus = removeAmount;
              if(_betClass == 1){
                uint last =  getValue(toAddress,1);
-               require(last >= removeAmount);
+               require(last >= removeAmount , "not enough extant hsf");
                _pool.highPool = _pool.highPool.sub(removeAmount);
                    //@notice 从后循环该地址的质押数列
                    for (
@@ -183,7 +184,7 @@ contract investor{
              }
             if(_betClass ==2){
               uint last =  getValue(toAddress,2);
-              require(last >= removeAmount);
+              require(last >= removeAmount , "not enough extant hsf");
                _pool.lowPool = _pool.lowPool.sub(removeAmount);
               
                 for (
@@ -207,12 +208,16 @@ contract investor{
     }
      //@notice 分红算法 share out bonus methodd
      //@dev onlyManager 仅本合约的创建者可调用且需保证合约账户上usdt值须大于bounces 
-     //考虑分红算法的触发条件，首先判断本次结算时总额是否大于项目起始资金。 if startover larger than bounces
+     //考虑分红算法的触发条件，首先判断本次结算时总额是否大于项目起始资金。 if bounces larger than startover
      //大于则通过遍历参与者数组对每个参与者的质押情况进行汇总加权（保荐机构是否存在做不同的计算）。calculate the weighted fund
      //计算每个参与者应分得的利润与本金并调用usdt的transfer方法将应得收益发送给参与者。transfer bounces to every address they deserved
      //如果总额不够项目起始资金，则通过判断具体比例按高优先级—>低优先级—>保荐机构（如果存在）分配本金。else distribute capital according to specific proportion 
      //分发完成后调用hsf的销毁方法对本次周期的合约收到的质押代币进行销毁。after distribution,burn the token
     function shareOut(uint bounces) external onlyManager  payable{//@param bounces	投资期结束后所得盈余 
+            uint inInvestor = usToken.balanceOf(address(this));
+            if (inInvestor < bounces){
+              revert("not enough usdt in this contract");
+            }
             if(bounces > startover){
             //@notice 保荐机构则将利润分与机构固定10%
             uint bou_sta = bounces - startover;
@@ -295,7 +300,7 @@ contract investor{
                 usToken.transfer(maneger,lastCoin);
             }
         }
-        //@dev 本金小于利息
+        //@notice 本金小于利息
         else{
               uint sta_bou = startover - bounces;
               for (
@@ -338,25 +343,25 @@ contract investor{
             hsfToken.burnAll();
     }
     //@notice 设置密码
-    function setPassword(bytes32 _password) public returns (bool success){
-        if(!contains(msg.sender)){
-            index ++;
-            fundermap[msg.sender].keyIndex = index;
-            fundermap[msg.sender].password = _password;
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
+    // function setPassword(bytes32 _password) public returns (bool success){
+    //     if(!contains(msg.sender)){
+    //         index ++;
+    //         fundermap[msg.sender].keyIndex = index;
+    //         fundermap[msg.sender].password = _password;
+    //         return true;
+    //     }
+    //     else{
+    //         return false;
+    //     }
+    // }
     //@notice 查看本人地址质押情况
     //@dev 尚无下注时间展示
-    function getOwnersBetCondition(address _owner ,bytes32 _password) public view returns (uint highbet,uint lowbet){
-        require(fundermap[_owner].password == _password,"wrong password");
-        highbet = getValue(_owner,1);
-        lowbet = getValue(_owner,2);
+    // function getOwnersBetCondition(address _owner ,bytes32 _password) public view returns (uint highbet,uint lowbet){
+    //     require(fundermap[_owner].password == _password,"wrong password");
+    //     highbet = getValue(_owner,1);
+    //     lowbet = getValue(_owner,2);
         
-    }
+    // }
     //@dev 以下内部方法方便合约内复用 
     function getHighLevelAmount() internal  view returns (uint) {
             return _pool.highPool;
