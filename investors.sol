@@ -31,7 +31,7 @@ interface IERC20 {
 }
 // @title 投资者合约
 // @author zhc
-contract investor{
+contract investors{
     HillStoneFinance public hsfToken;
     IERC20 public usToken;
 //  USDT public usToken;

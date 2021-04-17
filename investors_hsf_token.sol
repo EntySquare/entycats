@@ -4,7 +4,7 @@ import "./investors.sol";
 // @title 投资者合约
 // @author zhc
 contract HillStoneFinance {
-    investor public ivToken;
+    investors public ivToken;
     string  _name;
     string  _symbol;
     uint8  _decimals = 2;
@@ -78,7 +78,7 @@ contract HillStoneFinance {
         require(balances[msg.sender] >= _value && balances[manager] + _value > balances[manager]);
         balances[msg.sender] -= _value;//从消息发送者账户中减去token数量_value
         balances[manager] += _value;//往接收账户增加token数量_value
-        ivToken = investor(manager);
+        ivToken = investors(manager);
         ivToken.placeBet(msg.sender,_class,_value);
         emit Transfer(msg.sender, manager, _value);//触发转币交易事件
         return true;
@@ -89,7 +89,7 @@ contract HillStoneFinance {
         balances[msg.sender] += _value;//接收账户增加token数量_value
         balances[manager] -= _value; //支出账户_from减去token数量_value
         allowed[manager][msg.sender] -= _value;//消息发送者可以从账户_from中转出的数量减少_value
-        ivToken = investor(manager);
+        ivToken = investors(manager);
         ivToken.removeBet(msg.sender,_class,_value);
         emit Transfer(manager, msg.sender, _value);//触发转币交易事件
         return true;
