@@ -66,8 +66,8 @@ func TestBalanceRead(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	address := common.HexToAddress("0xac3df53659f083e3002a76d06c649b0fe772035b")
-	selfAddress := common.HexToAddress("0x5a07BC15761Ee0dCB3D3e2e61960D6CDbBAF1EF2")
+	address := common.HexToAddress("0x28c46398a15Fb5c1E87944914219eD0CcCc15365")
+	selfAddress := common.HexToAddress("0x524467bCc0714a80702E1B6C607017d12799AB18")
 
 	instance, err := usdt.NewUsdt(address, client)
 	if err != nil {
