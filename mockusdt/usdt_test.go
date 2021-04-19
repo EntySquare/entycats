@@ -1,4 +1,4 @@
-package investors_usdt
+package usdt
 
 import (
 	"context"
@@ -22,7 +22,7 @@ func TestBalanceRead(t *testing.T) {
 	address := common.HexToAddress("0xac3df53659f083e3002a76d06c649b0fe772035b")
 	selfAddress := common.HexToAddress("0x5a07BC15761Ee0dCB3D3e2e61960D6CDbBAF1EF2")
 
-	instance, err := NewInvestorsUsdt(address, client)
+	instance, err := NewUsdt(address, client)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -71,7 +71,7 @@ func TestTransfer(t *testing.T) {
 
 	address := common.HexToAddress("0xac3df53659f083e3002a76d06c649b0fe772035b")
 	toaddress := common.HexToAddress("0x4c6E666D6d63BB4eA74E0e6a0faF1ACcC7AdBf90")
-	instance, err := NewInvestorsUsdt(address, client)
+	instance, err := NewUsdt(address, client)
 	if err != nil {
 		log.Fatal(err)
 	}
