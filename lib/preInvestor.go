@@ -1,4 +1,4 @@
-package ilib
+package lib
 
 import (
 	"context"
@@ -68,7 +68,9 @@ func Init(ru string, pk string, so int64, itf bool, it string) {
 	//placeBet(20,2,getAuth(3000000,client),hsfAddress,hsfInstance)
 }
 
-func PAR(class int64, value int64, tp string, _ha common.Address, _ia common.Address, pk string) {
+func PAR(class int64, value int64, tp string, ha string, ia string, pk string) {
+	_ia := common.HexToAddress(ia)
+	_ha := common.HexToAddress(ha)
 	client := getClient()
 	auth := getAuthByPrivateKey(3000000, client, pk)
 	//	auth := getAuthByPrivateKey(3000000,client,"")
@@ -111,7 +113,8 @@ func Trans(_ia common.Address, _ua common.Address, _value int64) {
 
 	fmt.Printf("tx sent: %s", tx.Hash().Hex()) // tx sent:
 }
-func ShareOut(bounces int64, _ia common.Address, pk string) {
+func ShareOut(bounces int64, ia string, pk string) {
+	_ia := common.HexToAddress(ia)
 	client := getClient()
 	auth := getAuthByPrivateKey(3000000, client, pk)
 	investorsInstance, err := NewInvestors(_ia, client)
