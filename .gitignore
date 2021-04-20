@@ -2,3 +2,4 @@ artifacts
 examples/artifacts
 .idea
 *.iml
+go.sum
