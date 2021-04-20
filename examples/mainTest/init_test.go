@@ -3,7 +3,7 @@ package mainTest
 import (
 	"context"
 	"crypto/ecdsa"
-	investors "entysquare/entycats/lib"
+	investors "entysquare/entycats/ilib"
 	hsf "entysquare/entycats/mockhsf"
 	usdt "entysquare/entycats/mockusdt"
 	"fmt"
