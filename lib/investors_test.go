@@ -1,4 +1,4 @@
-package investors
+package lib
 
 import (
 	"context"
