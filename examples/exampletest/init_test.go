@@ -1,12 +1,12 @@
-package mainTest
+package exampletest
 
 import (
 	"context"
 	"crypto/ecdsa"
-	investors "entysquare/entycats/lib"
-	hsf "entysquare/entycats/mockhsf"
-	usdt "entysquare/entycats/mockusdt"
 	"fmt"
+	hsf "github.com/entysquare/entycats/hsf"
+	investors "github.com/entysquare/entycats/lib"
+	usdt "github.com/entysquare/entycats/mockusdt"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"

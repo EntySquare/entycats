@@ -1,13 +1,12 @@
-package investors
+package lib
 
 import (
 	"context"
 	"crypto/ecdsa"
-	hsf "entysquare/entycats/mockhsf"
-	usdt "entysquare/entycats/mockusdt"
 	"fmt"
-	investors_usdt "entysquare/entycats/mockusdt"
-	"fmt"
+	hsf "github.com/entysquare/entycats/hsf"
+	investors_usdt "github.com/entysquare/entycats/mockusdt"
+	usdt "github.com/entysquare/entycats/mockusdt"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -106,7 +105,7 @@ func Test5(t *testing.T) { //总高度
 	//address := addressMethod[:32]
 	//amount := addressMethod[32:]
 
-	parsed, err := abi.JSON(strings.NewReader(investors_usdt.InvestorsUsdtABI))
+	parsed, err := abi.JSON(strings.NewReader(investors_usdt.UsdtABI))
 	if err != nil {
 		panic(err)
 	}
