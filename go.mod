@@ -1,4 +1,4 @@
-module entysquare/entycats
+module github.com/entysquare/entycats
 
 go 1.15
 
