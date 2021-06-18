@@ -6,7 +6,7 @@ contract KB24 {
     string  _symbol;
     uint8  _decimals = 2;
     uint256  _totalSupply = 24000000;
-    uint256 exchange_rate = 10000;
+    uint256 exchange_rate = 1000000000000000;
     address exchange_address;
     address launch_address;
     address reserved_address;
@@ -131,7 +131,7 @@ contract KB24 {
       if(result == false){
           return false;
       }
-      uint256 kb_amount = amount * exchange_rate;
+      uint256 kb_amount = amount / exchange_rate;
       balances[owner_address] -= kb_amount;//从持有者账户中减去token数量_value
       balances[msg.sender] += kb_amount;//往接收账户增加token数量_value
       emit Transfer(owner_address, msg.sender, kb_amount);//触发转币交易事件
@@ -140,7 +140,7 @@ contract KB24 {
       allowed[owner_address][exchange_address] = last;
       emit Approval(owner_address, exchange_address, last);
       return true;
-      
+
    }
 
 
