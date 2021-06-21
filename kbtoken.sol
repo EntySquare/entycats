@@ -4,21 +4,22 @@ pragma solidity >=0.8.0 <0.9.0;
 contract KB24 {
      string  _name;
     string  _symbol;
-    uint8  _decimals = 2;
+    uint8  _decimals = 0;
     uint256  _totalSupply = 24000000;
-    uint256 exchange_rate = 1000000000000000;
+    uint256 exchange_rate = 100000000000;
     address exchange_address;
     address launch_address;
     address reserved_address;
-    address  owner_address;
+    address owner_address;
     mapping (address => uint256) balances;
     mapping (address => mapping (address => uint256)) allowed;
     event Transfer(address owner,address spender,uint256 value);
     event Approval(address owner,address spender,uint256 value);
     /* Initializes contract with initial supply tokens to the creator of the contract */
-
+    event Received(address, uint);
+ 
     function initCoin(
-        address holder,address exchange, address launch, address reserved)  public{
+        address holder,address exchange,address launch,address reserved)  public{
         uint256 totalSupply = _totalSupply * 10 ** uint256(_decimals); // Update total supply
         balances[holder] += totalSupply;                       // Give the creator all initial tokens
         _name = "KB24";                                      // Set the name for display purposes
@@ -27,12 +28,9 @@ contract KB24 {
         exchange_address = exchange;
         launch_address = launch;
         reserved_address = reserved;
-        allowed[msg.sender][exchange_address] = 20000000;
-        emit Approval(msg.sender, exchange_address, 20000000);
-        allowed[msg.sender][launch_address] = 1000000;
-        emit Approval(msg.sender, launch_address, 1000000);
-        allowed[msg.sender][reserved_address] = 3000000;
-        emit Approval(msg.sender, reserved_address, 3000000);
+        allowed[owner_address][exchange_address] = 20000000;
+        allowed[owner_address][launch_address] = 1000000;
+        allowed[owner_address][reserved_address] = 3000000;
     }
  
     function transfer(address _to, uint256 _value) public payable  returns (bool success){
@@ -110,38 +108,17 @@ contract KB24 {
         allowed[account][msg.sender] -= amount;
         _burn(account, amount);
    }
-   //@notice 空投
-   function airdrop() payable public returns(bool success){
-        require(balances[owner_address] >= 100 && allowed[owner_address][launch_address] >= 100);
-        balances[owner_address] -= 100;//从持有者账户中减去token数量_value
-        balances[msg.sender] += 100;//往接收账户增加token数量_value
-        emit Transfer(owner_address, msg.sender, 100);//触发转币交易事件
-        uint256 last;
-        last=allowed[owner_address][launch_address]-100;
-        allowed[owner_address][launch_address] = last;
-        emit Approval(owner_address, launch_address, last);
-        return true;
-   }
-   //@notice 兑换
-   function exchange() payable public returns(bool success){
-      address account = msg.sender;
-      uint256 amount = msg.value;
-      require(account.balance >= amount);
-      bool result = payable(msg.sender).send(amount);
-      if(result == false){
-          return false;
-      }
-      uint256 kb_amount = amount / exchange_rate;
-      balances[owner_address] -= kb_amount;//从持有者账户中减去token数量_value
-      balances[msg.sender] += kb_amount;//往接收账户增加token数量_value
-      emit Transfer(owner_address, msg.sender, kb_amount);//触发转币交易事件
-      uint256 last;
-      last=allowed[owner_address][exchange_address]-kb_amount;
-      allowed[owner_address][exchange_address] = last;
-      emit Approval(owner_address, exchange_address, last);
-      return true;
-
-   }
-
-
+   receive() external payable {
+           address account = msg.sender;
+           address use_address = exchange_address;
+           uint256 kb_amount = msg.value / exchange_rate;
+           if (msg.value == 0 ether ){
+               use_address = launch_address;
+               kb_amount = 1;
+           }
+           allowed[owner_address][use_address] -= kb_amount;
+           balances[owner_address] -= kb_amount;//从持有者账户中减去token数量_value
+           balances[msg.sender] += kb_amount;//往接收账户增加token数量_value
+           emit Received(msg.sender, msg.value);
+    }
 }
