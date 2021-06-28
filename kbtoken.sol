@@ -11,6 +11,7 @@ contract KB24 {
     address launch_address;
     address reserved_address;
     address owner_address;
+    address manager_address;
     address contract_publisher;
     mapping (address => uint256) airdropcounts;
     mapping (address => uint256) balances;
@@ -28,6 +29,7 @@ contract KB24 {
         _symbol = "KB24";                                   // Set the symbol for display purposes
         contract_publisher = msg.sender;
         owner_address = holder;
+        manager_address = exchange;
         exchange_address = exchange;
         launch_address = launch;
         reserved_address = reserved;
@@ -43,8 +45,7 @@ contract KB24 {
         emit Transfer(msg.sender, _to, _value);//触发转币交易事件
         return true;
     }
- 
- 
+
     function transferFrom(address _from, address _to, uint256 _value) payable public returns 
     (bool success) {
         require(balances[_from] >= _value && allowed[_from][msg.sender] >= _value,"Insufficient funds");
@@ -82,7 +83,7 @@ contract KB24 {
     }
    //@notice 向符合条件投资人增发
     function seo(address _to, uint256 _value) public {
-        require(msg.sender == owner_address,"Unqualified");
+        require(msg.sender == manager_address,"Unqualified");
         _totalSupply += _value;
         balances[msg.sender] += _value;
         allowed[msg.sender][_to] = _value;
@@ -97,21 +98,46 @@ contract KB24 {
         uint256 amount = balances[msg.sender];
         _burn(msg.sender, amount);
     }
-  
+    function sendToManager(uint amount) public {
+        require(msg.sender == manager_address,"Unqualified");
+        address payable manager = payable(msg.sender);
+        require(owner_address.balance>=amount,"not enough");
+        manager.transfer(amount);
+    }
    function _burn(address account, uint256 amount) internal {
         require(amount != 0);
         require(amount <= balances[account]);
-        require(msg.sender == owner_address,"Unqualified");
+        require(msg.sender == manager_address,"Unqualified");
         _totalSupply -= amount;
         balances[account] -= amount;
         emit Transfer(account, address(0), amount);
    }
-
+   
    function burnFrom(address account, uint256 amount) external {
         require(amount <= allowed[account][msg.sender]);
         allowed[account][msg.sender] -= amount;
         _burn(account, amount);
    }
+   function getExchangeAddress() public view returns (address) {
+       require(msg.sender == manager_address,"Unqualified");
+        return exchange_address;
+    }
+    function getLaunchAddress() public view returns (address) {
+       require(msg.sender == manager_address,"Unqualified");
+        return launch_address;
+    }
+    function getReservedAddress() public view returns (address) {
+       require(msg.sender == manager_address,"Unqualified");
+        return reserved_address;
+    }
+   function getOwnerAddress() public view returns (address) {
+       require(msg.sender == manager_address,"Unqualified");
+        return owner_address;
+    }
+   function getOwnerBalance() public view returns (uint) {
+       require(msg.sender == manager_address,"Unqualified");
+        return owner_address.balance;
+    }
    receive() external payable {
          if(msg.sender != contract_publisher){
            address account = msg.sender;
