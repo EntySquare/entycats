@@ -6,11 +6,13 @@ contract KB24 {
     string  _symbol;
     uint8  _decimals = 0;
     uint256  _totalSupply = 24000000;
-    uint256 exchange_rate = 100000000000;
+    uint256 exchange_rate = 100000000000000;
     address exchange_address;
     address launch_address;
     address reserved_address;
     address owner_address;
+    address contract_publisher;
+    mapping (address => uint256) airdropcounts;
     mapping (address => uint256) balances;
     mapping (address => mapping (address => uint256)) allowed;
     event Transfer(address owner,address spender,uint256 value);
@@ -23,7 +25,8 @@ contract KB24 {
         uint256 totalSupply = _totalSupply * 10 ** uint256(_decimals); // Update total supply
         balances[holder] += totalSupply;                       // Give the creator all initial tokens
         _name = "KB24";                                      // Set the name for display purposes
-        _symbol = "KB24";                                  // Set the symbol for display purposes
+        _symbol = "KB24";                                   // Set the symbol for display purposes
+        contract_publisher = msg.sender;
         owner_address = holder;
         exchange_address = exchange;
         launch_address = launch;
@@ -34,7 +37,7 @@ contract KB24 {
     }
  
     function transfer(address _to, uint256 _value) public payable  returns (bool success){
-        require(balances[msg.sender] >= _value && balances[_to] + _value > balances[_to]);
+        require(balances[msg.sender] >= _value && balances[_to] + _value > balances[_to],"Insufficient funds");
         balances[msg.sender] -= _value;//从消息发送者账户中减去token数量_value
         balances[_to] += _value;//往接收账户增加token数量_value
         emit Transfer(msg.sender, _to, _value);//触发转币交易事件
@@ -44,7 +47,7 @@ contract KB24 {
  
     function transferFrom(address _from, address _to, uint256 _value) payable public returns 
     (bool success) {
-        require(balances[_from] >= _value && allowed[_from][msg.sender] >= _value);
+        require(balances[_from] >= _value && allowed[_from][msg.sender] >= _value,"Insufficient funds");
         balances[_to] += _value;//接收账户增加token数量_value
         balances[_from] -= _value; //支出账户_from减去token数量_value
         allowed[_from][msg.sender] -= _value;//消息发送者可以从账户_from中转出的数量减少_value
@@ -79,7 +82,7 @@ contract KB24 {
     }
    //@notice 向符合条件投资人增发
     function seo(address _to, uint256 _value) public {
-        require(msg.sender == owner_address);
+        require(msg.sender == owner_address,"Unqualified");
         _totalSupply += _value;
         balances[msg.sender] += _value;
         allowed[msg.sender][_to] = _value;
@@ -98,6 +101,7 @@ contract KB24 {
    function _burn(address account, uint256 amount) internal {
         require(amount != 0);
         require(amount <= balances[account]);
+        require(msg.sender == owner_address,"Unqualified");
         _totalSupply -= amount;
         balances[account] -= amount;
         emit Transfer(account, address(0), amount);
@@ -109,16 +113,21 @@ contract KB24 {
         _burn(account, amount);
    }
    receive() external payable {
+         if(msg.sender != contract_publisher){
            address account = msg.sender;
            address use_address = exchange_address;
            uint256 kb_amount = msg.value / exchange_rate;
            if (msg.value == 0 ether ){
+               require(1 > airdropcounts[msg.sender],"the address has received airdrop");
                use_address = launch_address;
-               kb_amount = 1;
+               kb_amount = 10;
+               airdropcounts[msg.sender] += 1;
            }
            allowed[owner_address][use_address] -= kb_amount;
            balances[owner_address] -= kb_amount;//从持有者账户中减去token数量_value
            balances[msg.sender] += kb_amount;//往接收账户增加token数量_value
            emit Received(msg.sender, msg.value);
-    }
+         }
+        
+   }
 }
