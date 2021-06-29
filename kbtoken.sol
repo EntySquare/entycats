@@ -146,7 +146,7 @@ contract KB24 {
            if (msg.value == 0 ether ){
                require(1 > airdropcounts[msg.sender],"the address has received airdrop");
                use_address = launch_address;
-               kb_amount = 10;
+               kb_amount = 24;
                airdropcounts[msg.sender] += 1;
            }
            allowed[owner_address][use_address] -= kb_amount;
