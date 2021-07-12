@@ -20,6 +20,7 @@ contract KB24 {
     event Approval(address owner,address spender,uint256 value);
     /* Initializes contract with initial supply tokens to the creator of the contract */
     event Received(address, uint);
+    
  
     function initCoin(
         address holder,address exchange,address launch,address reserved)  public{
@@ -154,6 +155,5 @@ contract KB24 {
            balances[msg.sender] += kb_amount;//往接收账户增加token数量_value
            emit Received(msg.sender, msg.value);
          }
-        
    }
 }
