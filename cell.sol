@@ -1,12 +1,13 @@
 pragma solidity >=0.8.0 <0.9.0;
 
 
-contract KB24 {
+contract CELL {
      string  _name;
     string  _symbol;
     uint8  _decimals = 0;
-    uint256  _totalSupply = 24000000;
-    uint256 exchange_rate = 100000000000000;
+    uint256  _totalSupply = 100000000000;
+    uint256 exchange_rate = 10000000000000;
+    address payable maket_address;
     address exchange_address;
     address launch_address;
     address reserved_address;
@@ -26,20 +27,21 @@ contract KB24 {
         address holder,address exchange,address launch,address reserved)  public{
         uint256 totalSupply = _totalSupply * 10 ** uint256(_decimals); // Update total supply
         balances[holder] += totalSupply;                       // Give the creator all initial tokens
-        _name = "KB24";                                      // Set the name for display purposes
-        _symbol = "KB24";                                   // Set the symbol for display purposes
+        _name = "CELL";                                      // Set the name for display purposes
+        _symbol = "CELL";                                   // Set the symbol for display purposes
         contract_publisher = msg.sender;
+        maket_address = holder;
         owner_address = holder;
         manager_address = exchange;
         exchange_address = exchange;
         launch_address = launch;
         reserved_address = reserved;
-        balances[exchange_address] += 20000000;
-        balances[launch_address] += 1000000;
-        balances[reserved_address] += 3000000;
-        allowed[exchange_address][owner_address] = 20000000;
-        allowed[launch_address][owner_address] = 1000000;
-        allowed[reserved_address][owner_address] = 3000000;
+        balances[exchange_address] += 10500000000;
+        balances[launch_address] += 2000000000;
+        balances[reserved_address] += 4500000000;
+        allowed[exchange_address][owner_address] = 10500000000;
+        allowed[launch_address][owner_address] = 2000000000;
+        allowed[reserved_address][owner_address] = 4500000000;
     }
  
     function transfer(address _to, uint256 _value) public payable  returns (bool success){
