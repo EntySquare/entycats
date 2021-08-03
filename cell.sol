@@ -2,12 +2,15 @@ pragma solidity >=0.8.0 <0.9.0;
 
 
 contract CELL {
-     string  _name;
+    using SafeMath for uint256;
+    
+    string  _name;
     string  _symbol;
     uint8  _decimals = 0;
     uint256  _totalSupply = 100000000000;
     uint256 exchange_rate = 10000000000000;
-    address payable maket_address;
+    address[] payable partners;
+    uint256 public transaction_rate
     address exchange_address;
     address launch_address;
     address reserved_address;
@@ -140,4 +143,46 @@ contract CELL {
            emit Received(msg.sender, msg.value);
          }
    }
+}
+
+library SafeMath {
+   
+    function mul(uint256 a, uint256 b) internal pure returns (uint256) {
+        if (a == 0) {
+            return 0;
+        }
+ 
+        uint256 c = a * b;
+        require(c / a == b, "SafeMath:multiplication overflow");
+        return c;
+    }
+ 
+
+    function div(uint256 a, uint256 b) internal pure returns (uint256) {
+        require(b > 0, "SafeMath:division overflow");
+        uint256 c = a / b;
+        return c;
+    }
+ 
+
+    function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+        require(b <= a, "SafeMath: subtraction overflow");
+        uint256 c = a - b;
+ 
+        return c;
+    }
+ 
+
+    function add(uint256 a, uint256 b) internal pure returns (uint256) {
+        uint256 c = a + b;
+        require(c >= a, "SafeMath: addition overflow");
+ 
+        return c;
+    }
+ 
+  
+    function mod(uint256 a, uint256 b) internal pure returns (uint256) {
+        require(b != 0, "SafeMath: mod overflow");
+        return a % b;
+    }
 }
