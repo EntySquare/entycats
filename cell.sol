@@ -420,10 +420,11 @@ contract CELL {
        tokens[_token_code].token_address = _token_address;
        tokens[_token_code].exchange_rate = _exchange_rate;
   }
-  function withdrawToken(uint8 _token_code,uint256 _amout) external{
+  function withdrawToken(uint8 _token_code,address _recived,uint256 _amout) external{
       if (msg.sender != manager_address) revert();
-      IERC20(tokens[_token_code].token_address)
-      
+      token_withdraw = IERC20(tokens[_token_code].token_address);
+      require(token_withdraw.balanceOf[manager_address] >= _amount);
+      token_withdraw.transferForm(manager_address,received,_amout);
   }
 }
 
