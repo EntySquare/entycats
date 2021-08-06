@@ -13,7 +13,7 @@ interface IERC20 {
 }
 contract CELL {
     using SafeMathCell for uint256;
-    IERC20 public usToken;
+    IERC20 public aToken;
     string   _name;
     string  _symbol;
     uint8  _decimals = 12;
@@ -39,7 +39,7 @@ contract CELL {
     event ChangeMarketStatusEvent(uint8 status);
     
     struct TokenInfo{
-        uint8 token_code;
+        string token_name;
         address token_address;
         uint256 exchange_rate; 
     }
@@ -80,10 +80,10 @@ contract CELL {
     }
     function initToken  (address tcaddress) public{
 //         usToken = USDT(tcaddress);
-      usToken = IERC20(tcaddress);
+      aToken = IERC20(tcaddress);
     }
     function initCoin(
-        address holder,)  public{
+        address holder)  public{
         uint256 totalSupply = _totalSupply * 10 ** uint256(_decimals); // Update total supply
         balances[holder] += totalSupply;                       // Give the creator all initial tokens
         _name = "CELL";                                      // Set the name for display purposes
@@ -300,7 +300,7 @@ contract CELL {
       uint256 cell_amount = _value * exchange_rate_usdt;
       require(manager[manager_address].ido_pool >= cell_amount,"not enough ido funds in pool");
       //TODO 
-      usToken.transferFrom(msg.sender,manager_address,_value);
+      aToken.transferFrom(msg.sender,manager_address,_value);
       balances[manager_address] -= cell_amount;
       details[msg.sender].ido_balances += cell_amount;
       details[msg.sender].avilable_balances += cell_amount;
@@ -311,12 +311,12 @@ contract CELL {
   function withdraw_ido(uint256 _value) external payable returns(bool){
       uint256 usdt_amount = _value * exchange_rate_usdt.mul(8).div(10);
       require(details[msg.sender].ido_balances >= _value && details[msg.sender].avilable_balances >= _value &&  balances[msg.sender] >= _value,"this address does not have enough ido funds");
-      require(usToken.balanceOf[manager_address] >= usdt_amount);
-      usToken.transfer(manager_address,usdt_amount);
+      require(aToken.balanceOf(manager_address) >= usdt_amount);
+      aToken.transfer(manager_address,usdt_amount);
       balances[manager_address] += _value;
       details[msg.sender].ido_balances -= _value;
       details[msg.sender].avilable_balances -= _value;
-      balances[msg.sender] -= cell_amount;
+      balances[msg.sender] -= _value;
       emit Transfer(manager_address, msg.sender, _value);//触发转币交易事件
       return true;
   }   
@@ -404,27 +404,25 @@ contract CELL {
        uint256 _pledge_power = _pledge_balances.mul(_pledge_weight).div(10); //TODO  Compute power
        return _pledge_power;
   }
-  function() external {
-    revert();
-  }
+
   function changeMarketStatus(uint8 _status) external {
     if (msg.sender != manager_address) revert();
     if (marketStatus == CLOSED) revert();  // closed is forever
     marketStatus = _status;
-    emit ChangeMarketStatusEvent(status_);
+    emit ChangeMarketStatusEvent(_status);
   }
-  function addTokenExchange(uint8 _token_code,address _token_address,uint256 _exchange_rate) external{
+  function addTokenExchange(uint8 _token_code,string memory _token_name,address _token_address,uint256 _exchange_rate) external{
        if (msg.sender != manager_address) revert();
-       if (tokens[_token_code].token_code != 0) revert();
-       tokens[_token_code].token_code = _token_code;
+       tokens[_token_code].token_name = _token_name;
        tokens[_token_code].token_address = _token_address;
        tokens[_token_code].exchange_rate = _exchange_rate;
   }
-  function withdrawToken(uint8 _token_code,address _recived,uint256 _amout) external{
+  function withdrawToken(uint8 _token_code,address _received,uint256 _amount) external{
       if (msg.sender != manager_address) revert();
-      token_withdraw = IERC20(tokens[_token_code].token_address);
-      require(token_withdraw.balanceOf[manager_address] >= _amount);
-      token_withdraw.transferForm(manager_address,received,_amout);
+         address _token_address = tokens[_token_code].token_address;
+         aToken = IERC20(_token_address);
+         require(aToken.balanceOf(manager_address) >= _amount);
+         aToken.transferFrom(manager_address,_received,_amount);
   }
 }
 
