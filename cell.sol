@@ -1,18 +1,33 @@
 // SPDX-License-Identifier: SimPL-2.0
 pragma solidity >=0.8.0 <0.9.0;
-
-
+import "./investors_usdt.sol";
+interface IERC20 {
+    function totalSupply()  external returns (uint256);
+    function balanceOf(address account) external view returns (uint256);
+    function transfer(address recipient, uint256 amount) external returns (bool);
+    function allowance(address owner, address spender) external view returns (uint256);
+    function approve(address spender, uint256 amount) external returns (bool);
+    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+    event Transfer(address  owner, address  spender, uint256 value);
+    event Approval(address  owner, address  spender, uint256 value);
+}
 contract CELL {
     using SafeMathCell for uint256;
-    
-    string  _name;
+    IERC20 public usToken;
+    string   _name;
     string  _symbol;
     uint8  _decimals = 12;
-    uint256  _totalSupply = 100000000000;
-    uint256 exchange_rate = 10000000000000;
+    uint8 constant ACTIVE = 0;
+    uint8 constant SUSPENDED = 1;
+    uint8 constant CLOSED = 2;
+    
+    uint256   _totalSupply = 1000000000000;
+    uint256 exchange_rate_usdt = 100000;
+    mapping(uint8 => TokenInfo) tokens;
 // uint256 transaction_rate = 8;
     address[] partners;
     address manager_address;
+    uint8 public marketStatus;
     mapping (address => ManagerStatus) manager;
     mapping (address => AddressStatus) details;
     mapping (address => uint256) balances;
@@ -21,15 +36,23 @@ contract CELL {
     event Approval(address owner,address spender,uint256 value);
     /* Initializes contract with initial supply tokens to the creator of the contract */
     event Received(address, uint);
+    event ChangeMarketStatusEvent(uint8 status);
     
+    struct TokenInfo{
+        uint8 token_code;
+        address token_address;
+        uint256 exchange_rate; 
+    }
     struct AddressStatus{
         uint256 locked_balances;
+        uint256 ido_balances;
         uint256 pledge_balances;
         uint256 avilable_balances;
         bool airdropflag;
         address recommender;
         address[] recommendation;
         uint256 pledge_power;
+        
         // address[] root_recommendation;   // first generation
         // address[] trunk_recommendation;  //Second generation to fourth generation
         // address[] branch_recommendation; // fifth generation to tenth generation
@@ -55,25 +78,36 @@ contract CELL {
         address[] miners;
         
     }
+    function initToken  (address tcaddress) public{
+//         usToken = USDT(tcaddress);
+      usToken = IERC20(tcaddress);
+    }
     function initCoin(
-        address holder)  public{
+        address holder,)  public{
         uint256 totalSupply = _totalSupply * 10 ** uint256(_decimals); // Update total supply
         balances[holder] += totalSupply;                       // Give the creator all initial tokens
         _name = "CELL";                                      // Set the name for display purposes
         _symbol = "CELL";                                   // Set the symbol for display purposes
         manager_address = holder;
+        marketStatus = ACTIVE;
         manager[holder].owner_address = holder;
-        manager[holder].launch_pool = 2000000000;
-        manager[holder].ido_pool = 10500000000;
-        manager[holder].creator_pool = 4500000000;
-        manager[holder].lp_pool = 18000000000;
-        manager[holder].pledge_pool = 65000000000;
+        manager[holder].launch_pool = 20000000000;
+        manager[holder].ido_pool = 105000000000;
+        manager[holder].creator_pool = 45000000000;
+        manager[holder].lp_pool = 180000000000;
+        manager[holder].pledge_pool = 650000000000;
     }
  
     function transfer(address _to, uint256 _value) public payable  returns (bool success){
         require(balances[msg.sender] >= _value && balances[_to] + _value > balances[_to],"Insufficient funds");
         require(details[msg.sender].avilable_balances >= _value,"Insufficient funds");
         balances[msg.sender] -= _value;//从消息发送者账户中减去token数量_value
+        if (details[msg.sender].ido_balances > _value){
+            details[msg.sender].ido_balances -= _value;
+        }
+        else{
+            details[msg.sender].ido_balances = 0;
+        }
         details[msg.sender].avilable_balances -= _value;
         uint256 tax = (_value * 8).div(100);
         uint256 to_jackpot = tax.div(4);
@@ -103,6 +137,12 @@ contract CELL {
         require(balances[_from] >= _value && allowed[_from][msg.sender] >= _value,"Insufficient funds");
         require(details[_from].avilable_balances >= _value,"Insufficient funds");
         balances[_from] -= _value; //支出账户_from减去token数量_value
+        if (details[_from].ido_balances > _value){
+            details[_from].ido_balances -= _value;
+        }
+        else{
+            details[_from].ido_balances = 0;
+        }
         details[_from].avilable_balances -= _value;
         uint256 tax = (_value * 8).div(100);
         uint256 to_jackpot = tax.div(4);
@@ -256,8 +296,29 @@ contract CELL {
   
   
   
-  function join_ido() external{
-      //TODO
+  function join_ido(uint256 _value) external payable returns(bool){
+      uint256 cell_amount = _value * exchange_rate_usdt;
+      require(manager[manager_address].ido_pool >= cell_amount,"not enough ido funds in pool");
+      //TODO 
+      usToken.transferFrom(msg.sender,manager_address,_value);
+      balances[manager_address] -= cell_amount;
+      details[msg.sender].ido_balances += cell_amount;
+      details[msg.sender].avilable_balances += cell_amount;
+      balances[msg.sender] += cell_amount;
+      emit Transfer(msg.sender, manager_address, _value);//触发转币交易事件前端先
+      return true;
+  }
+  function withdraw_ido(uint256 _value) external payable returns(bool){
+      uint256 usdt_amount = _value * exchange_rate_usdt.mul(8).div(10);
+      require(details[msg.sender].ido_balances >= _value && details[msg.sender].avilable_balances >= _value &&  balances[msg.sender] >= _value,"this address does not have enough ido funds");
+      require(usToken.balanceOf[manager_address] >= usdt_amount);
+      usToken.transfer(manager_address,usdt_amount);
+      balances[manager_address] += _value;
+      details[msg.sender].ido_balances -= _value;
+      details[msg.sender].avilable_balances -= _value;
+      balances[msg.sender] -= cell_amount;
+      emit Transfer(manager_address, msg.sender, _value);//触发转币交易事件
+      return true;
   }   
   
   function join_partners() external{
@@ -273,6 +334,7 @@ contract CELL {
   function pledge_miner() external{
       //TODO
   }
+  
   function pledge_award_prepare() internal returns(bool){
        for (
                 uint i = 0;
@@ -341,6 +403,27 @@ contract CELL {
        }
        uint256 _pledge_power = _pledge_balances.mul(_pledge_weight).div(10); //TODO  Compute power
        return _pledge_power;
+  }
+  function() external {
+    revert();
+  }
+  function changeMarketStatus(uint8 _status) external {
+    if (msg.sender != manager_address) revert();
+    if (marketStatus == CLOSED) revert();  // closed is forever
+    marketStatus = _status;
+    emit ChangeMarketStatusEvent(status_);
+  }
+  function addTokenExchange(uint8 _token_code,address _token_address,uint256 _exchange_rate) external{
+       if (msg.sender != manager_address) revert();
+       if (tokens[_token_code].token_code != 0) revert();
+       tokens[_token_code].token_code = _token_code;
+       tokens[_token_code].token_address = _token_address;
+       tokens[_token_code].exchange_rate = _exchange_rate;
+  }
+  function withdrawToken(uint8 _token_code,uint256 _amout) external{
+      if (msg.sender != manager_address) revert();
+      IERC20(tokens[_token_code].token_address)
+      
   }
 }
 
