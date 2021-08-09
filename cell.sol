@@ -11,33 +11,67 @@ interface IERC20 {
     event Transfer(address  owner, address  spender, uint256 value);
     event Approval(address  owner, address  spender, uint256 value);
 }
-contract CELL {
-    using SafeMathCell for uint256;
-    IERC20 public aToken;
-    string   _name;
-    string  _symbol;
-    uint8  _decimals = 12;
+// @title nucleus contract
+// @author yueliyangzi
+contract nucleus{
+    string public  _name;
+    string public _symbol;
+    uint8  public _decimals = 12;
+    uint256 public  _totalSupply = 1000000000000;
     uint8 constant ACTIVE = 0;
     uint8 constant SUSPENDED = 1;
     uint8 constant CLOSED = 2;
-    
-    uint256   _totalSupply = 1000000000000;
-    uint256 exchange_rate_usdt = 100000;
-    mapping(uint8 => TokenInfo) tokens;
-// uint256 transaction_rate = 8;
-    address[] partners;
-    address manager_address;
     uint8 public marketStatus;
-    mapping (address => ManagerStatus) manager;
-    mapping (address => AddressStatus) details;
-    mapping (address => uint256) balances;
+    address manager_address;
+    mapping (address => uint256)  balances;
     mapping (address => mapping (address => uint256)) allowed;
     event Transfer(address owner,address spender,uint256 value);
     event Approval(address owner,address spender,uint256 value);
-    /* Initializes contract with initial supply tokens to the creator of the contract */
-    event Received(address, uint);
     event ChangeMarketStatusEvent(uint8 status);
     
+    function balanceOf(address _owner) public view returns (uint256 balance) {
+        return balances[_owner];
+    }
+    function approve(address _spender, uint256 _value) public returns (bool success)   
+    { 
+         require((_value == 0) || (allowed[msg.sender][_spender] == 0));
+        allowed[msg.sender][_spender] = _value;
+       emit Approval(msg.sender, _spender, _value);
+        return true;
+    }
+    function allowance(address _owner, address _spender) public view returns (uint256 remaining) {
+        return allowed[_owner][_spender];//允许_spender从_owner中转出的token数
+    }
+    function name() public view returns (string memory) {
+        return _name;
+    }
+    function symbol() public view returns (string memory){
+        return _symbol;
+    }
+    function decimals() public view returns (uint8){
+        return _decimals;
+    }
+    function viewtotalSupply() public view returns (uint256){
+        return _totalSupply;
+    }
+    //@notice Interface reserved for change market status 
+    function changeMarketStatus(uint8 _status) external {
+        require (msg.sender == manager_address);
+        if (marketStatus == CLOSED) revert();  // closed is forever
+        marketStatus = _status;
+        emit ChangeMarketStatusEvent(_status);
+    }
+}
+// @title cell contract
+// @author yueliyangzi
+contract CELL is nucleus {
+    using SafeMathCell for uint256;
+    IERC20 public aToken;
+    uint256 exchange_rate_usdt = 100000;
+    mapping(uint8 => TokenInfo) tokens;
+    address[] partners;
+    mapping (address => ManagerStatus) manager;
+    mapping (address => AddressStatus) details;
     struct TokenInfo{
         string token_name;
         address token_address;
@@ -52,13 +86,6 @@ contract CELL {
         address recommender;
         address[] recommendation;
         uint256 pledge_power;
-        
-        // address[] root_recommendation;   // first generation
-        // address[] trunk_recommendation;  //Second generation to fourth generation
-        // address[] branch_recommendation; // fifth generation to tenth generation
-        // address[] leaf_recommendation;   // eleventh generation to fifteenth generation
-        // address[] vein_recommendation;   // sixteenth generation to twentieth generation
-        
     }
     struct ManagerStatus{
         address owner_address;
@@ -78,10 +105,13 @@ contract CELL {
         address[] miners;
         
     }
+    //@notice 实例化测试的合约
     function initToken  (address tcaddress) public{
 //         usToken = USDT(tcaddress);
       aToken = IERC20(tcaddress);
     }
+     /* Initializes contract with initial supply tokens to the creator of the contract */
+    //@notice Contract initial setting
     function initCoin(
         address holder)  public{
         uint256 totalSupply = _totalSupply * 10 ** uint256(_decimals); // Update total supply
@@ -97,7 +127,6 @@ contract CELL {
         manager[holder].lp_pool = 180000000000;
         manager[holder].pledge_pool = 650000000000;
     }
- 
     function transfer(address _to, uint256 _value) public payable  returns (bool success){
         require(balances[msg.sender] >= _value && balances[_to] + _value > balances[_to],"Insufficient funds");
         require(details[msg.sender].avilable_balances >= _value,"Insufficient funds");
@@ -167,31 +196,7 @@ contract CELL {
         }
         return true;
     }
-    function balanceOf(address _owner) public view returns (uint256 balance) {
-        return balances[_owner];
-    }
-    function approve(address _spender, uint256 _value) public returns (bool success)   
-    { 
-         require((_value == 0) || (allowed[msg.sender][_spender] == 0));
-        allowed[msg.sender][_spender] = _value;
-       emit Approval(msg.sender, _spender, _value);
-        return true;
-    }
-    function allowance(address _owner, address _spender) public view returns (uint256 remaining) {
-        return allowed[_owner][_spender];//允许_spender从_owner中转出的token数
-    }
-    function name() public view returns (string memory) {
-        return _name;
-    }
-    function symbol() public view returns (string memory){
-        return _symbol;
-    }
-    function decimals() public view returns (uint8){
-        return _decimals;
-    }
-    function viewtotalSupply() public view returns (uint256){
-        return _totalSupply;
-    }
+    //@notice Logic of prize pool
     function award() internal {
         uint256 bonus = 0;
         uint256 pj = manager[manager_address].primary_jackpot;
@@ -234,43 +239,26 @@ contract CELL {
         }
         
     }    
-//   //@notice 向符合条件投资人增发
-//     function seo(address _to, uint256 _value) public {
-//         require(msg.sender == manager_address,"Unqualified");
-//         _totalSupply += _value;
-//         balances[_to] += _value;
-//         allowed[_to][owner_address] += _value;
-//         emit Approval(msg.sender, _to, _value);
-//     }
-//     //@notice 销毁
-//     function burn(uint256 amount) external {
-//         _burn(msg.sender, amount);
-//     }
-  
-//     function burnAll() external {
-//         uint256 amount = balances[msg.sender];
-//         _burn(msg.sender, amount);
-//     }
+  //@notice burn function internal
   function _burn(uint256 amount) internal {
         require(amount != 0);
         require(amount <= _totalSupply);
         _totalSupply -= amount;
   }     
-  
-  
-  
+  //@notice bind user with recommender (one can only have one recommender)
   function bindRecommender(address _recommender) external returns(bool){
       require(details[msg.sender].recommender == address(0),"this address has been bound");
       _bind(msg.sender,_recommender);
       return true;
   }
+  //@notice bind function internal
   function _bind(address _self,address _to) internal{
       details[_self].recommender = _to;
   }
   
   
   
-  
+   //@notice Logic of airdrop
   function airdrop(address _recommender) external returns(bool){
       require(!details[msg.sender].airdropflag,"the address has received airdrop");
              if (_recommender == address(0)){
@@ -286,6 +274,7 @@ contract CELL {
              }
              return true;
   }
+  //@notice airdrop function internal
   function _airdrop(address _to,uint256 amount) internal{
        details[_to].locked_balances += amount;
        balances[_to] += amount;
@@ -295,7 +284,7 @@ contract CELL {
   }
   
   
-  
+   //@notice Logic of join ido project
   function join_ido(uint256 _value) external payable returns(bool){
       uint256 cell_amount = _value * exchange_rate_usdt;
       require(manager[manager_address].ido_pool >= cell_amount,"not enough ido funds in pool");
@@ -308,6 +297,7 @@ contract CELL {
       emit Transfer(msg.sender, manager_address, _value);//触发转币交易事件前端先
       return true;
   }
+   //@notice user who join ido can recover 80% of investment
   function withdraw_ido(uint256 _value) external payable returns(bool){
       uint256 usdt_amount = _value * exchange_rate_usdt.mul(8).div(10);
       require(details[msg.sender].ido_balances >= _value && details[msg.sender].avilable_balances >= _value &&  balances[msg.sender] >= _value,"this address does not have enough ido funds");
@@ -320,22 +310,79 @@ contract CELL {
       emit Transfer(manager_address, msg.sender, _value);//触发转币交易事件
       return true;
   }   
-  
-  function join_partners() external{
-      //TODO
+  //@notice Participate in contract building community
+  function join_partners() external payable returns(bool){
+      require(partners.length <= 40,"There are already 40 people ");
+      //TODO 
+      aToken.transferFrom(msg.sender,manager_address,4000);
+    //   balances[manager_address] -= cell_amount;
+    //   details[msg.sender].ido_balances += cell_amount;
+    //   details[msg.sender].avilable_balances += cell_amount;
+    //   balances[msg.sender] += cell_amount;
+      partners.push(msg.sender);
+      return true;
   } 
   
-  
+  //@notice LP liquidity
   function lp_miner() external{
       //TODO
   }   
   
-  
-  function pledge_miner() external{
-      //TODO
+  //@notice pledge miner
+  function pledge_miner(uint256 _amount,bool pledgeflag) external returns(bool){
+      if(!pledgeflag){
+       return _quit(_amount);
+      }
+      return _pledge(_amount);
+  }
+  //@notice pledge function internal
+  function _pledge(uint256 _amount) internal returns(bool){
+      require (_amount <= details[msg.sender].avilable_balances,"not enough token in this address");
+      bool exist = false;
+         for (
+                uint i = 0;
+                i <= manager[manager_address].pledge_period.miners.length-1;
+                i ++
+                ){
+                  address pointer = manager[manager_address].pledge_period.miners[i];
+                  if (pointer == msg.sender){
+                        exist = true;
+                    }
+                }
+       if (!exist){
+           manager[manager_address].pledge_period.miners.push(msg.sender);
+       }
+       details[msg.sender].avilable_balances -= _amount;
+       details[msg.sender].pledge_balances += _amount;
+       return true;
+  }
+  //@notice _quit function internal
+  function _quit(uint256 _amount) internal returns(bool){
+      require (_amount <= details[msg.sender].pledge_balances,"not enough token in this pledge pool");
+      details[msg.sender].pledge_balances -= _amount;
+      details[msg.sender].avilable_balances += _amount;
+      return true;
   }
   
-  function pledge_award_prepare() internal returns(bool){
+  //@notice Interface reserved for external timed execution
+  function pledge_award() external returns(bool){
+      require (msg.sender == manager_address);
+      if (!_pledge_award_prepare()) revert();
+      for (
+                uint i = 0;
+                i <= manager[manager_address].pledge_period.miners.length-1;
+                i ++
+                ){
+                    address pointer = manager[manager_address].pledge_period.miners[i];
+                    if (details[pointer].pledge_balances > 0){
+                        
+                    }
+                }
+      return true;
+      
+  }
+  //@notice Logic of pledge prize pool
+  function _pledge_award_prepare() internal returns(bool){
        for (
                 uint i = 0;
                 i <= manager[manager_address].pledge_period.miners.length-1;
@@ -351,28 +398,14 @@ contract CELL {
                 }
                 return true;
   }
-  function _pledge_recommender_calculate(address _self,address _now,uint256 _pledge_power,uint8 _generation) internal returns(bool){
+  //@notice calc function internal
+  function _pledge_recommender_calculate(address _self,address _now,uint256 _pledge_power,uint256 _generation) internal returns(bool){
             if (details[_now].recommender == address(0)){
                 return true;
              }
              else{
-               uint256 ratio;
-               if(_generation == 1){
-                   ratio = 20;
-               }
-               if(_generation >= 2 && _generation <= 4){
-                   ratio = 15;
-               }
-               if(_generation >= 5 && _generation <= 10){
-                   ratio = 10;
-               }
-               if(_generation >= 11 && _generation <= 15){
-                   ratio = 8;
-               }
-               if(_generation >= 16 && _generation <= 20){
-                   ratio = 6;
-               }
-               if(_generation >= 21){
+               uint256 ratio = _generation.recommender_radio();
+               if(ratio == 0){
                    return true;
                }
                details[_now].pledge_power += _pledge_power.mul(ratio).div(100);
@@ -383,40 +416,22 @@ contract CELL {
              }
              
   }
+  //@notice calc function internal
   function _pledge_power_calculate(address _to) internal view returns(uint256){
        uint256 _pledge_balances = details[_to].pledge_balances;
-       uint256 _pledge_weight;
-       if(_pledge_balances < 100000000){
-           _pledge_weight = 15;
-       }
-       if(_pledge_balances >= 100000000 && _pledge_balances < 500000000){
-           _pledge_weight = 12;
-       }
-       if(_pledge_balances >= 500000000 && _pledge_balances < 1000000000){
-           _pledge_weight = 10;
-       }
-       if(_pledge_balances >= 1000000000 && _pledge_balances < 2000000000){
-           _pledge_weight = 7;
-       }
-       if(_pledge_balances >= 2000000000){
-           _pledge_weight = 5;
-       }
+       uint256 _pledge_weight = _pledge_balances.weight_coefficient();
        uint256 _pledge_power = _pledge_balances.mul(_pledge_weight).div(10); //TODO  Compute power
        return _pledge_power;
   }
 
-  function changeMarketStatus(uint8 _status) external {
-    if (msg.sender != manager_address) revert();
-    if (marketStatus == CLOSED) revert();  // closed is forever
-    marketStatus = _status;
-    emit ChangeMarketStatusEvent(_status);
-  }
+  //@notice Interface reserved for add token can be used
   function addTokenExchange(uint8 _token_code,string memory _token_name,address _token_address,uint256 _exchange_rate) external{
        if (msg.sender != manager_address) revert();
        tokens[_token_code].token_name = _token_name;
        tokens[_token_code].token_address = _token_address;
        tokens[_token_code].exchange_rate = _exchange_rate;
   }
+  //@notice Interface reserved for withdraw token from contract address (only for manager)
   function withdrawToken(uint8 _token_code,address _received,uint256 _amount) external{
       if (msg.sender != manager_address) revert();
          address _token_address = tokens[_token_code].token_address;
@@ -425,10 +440,9 @@ contract CELL {
          aToken.transferFrom(manager_address,_received,_amount);
   }
 }
-
-
+// @title cell library
+// @author yueliyangzi
 library SafeMathCell {
-   
     function mul(uint256 a, uint256 b) internal pure returns (uint256) {
         if (a == 0) {
             return 0;
@@ -453,18 +467,52 @@ library SafeMathCell {
  
         return c;
     }
- 
-
     function add(uint256 a, uint256 b) internal pure returns (uint256) {
         uint256 c = a + b;
         require(c >= a, "SafeMath: addition overflow");
  
         return c;
     }
- 
-  
+
     function mod(uint256 a, uint256 b) internal pure returns (uint256) {
         require(b != 0, "SafeMath: mod overflow");
         return a % b;
+    }
+    function recommender_radio(uint256 _generation) internal pure returns(uint256 ratio){
+              if(_generation == 1){
+                   return 20;
+               }
+               if(_generation >= 2 && _generation <= 4){
+                   return 15;
+               }
+               if(_generation >= 5 && _generation <= 10){
+                   return 10;
+               }
+               if(_generation >= 11 && _generation <= 15){
+                   return 8;
+               }
+               if(_generation >= 16 && _generation <= 20){
+                   return 6;
+               }
+               if(_generation >= 21){
+                   return 0;
+               }
+    }
+    function weight_coefficient(uint256 _pledge_balances) internal pure returns(uint256 ratio){
+        if(_pledge_balances < 100000000){
+           return 15;
+       }
+       if(_pledge_balances >= 100000000 && _pledge_balances < 500000000){
+           return 12;
+       }
+       if(_pledge_balances >= 500000000 && _pledge_balances < 1000000000){
+           return 10;
+       }
+       if(_pledge_balances >= 1000000000 && _pledge_balances < 2000000000){
+           return 7;
+       }
+       if(_pledge_balances >= 2000000000){
+           return 5;
+       }
     }
 }
