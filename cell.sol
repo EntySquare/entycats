@@ -66,8 +66,10 @@ contract nucleus{
 // @author yueliyangzi
 contract CELL is nucleus {
     using SafeMathCell for uint256;
+    using AddressArrayLimitCell for address[31];
+    using AddressArrayCell for address[];
     IERC20 public aToken;
-    uint256 exchange_rate_usdt = 100000;
+    uint256 constant exchange_rate_usdt = 100000;
     mapping(uint8 => TokenInfo) tokens;
     address[] partners;
     mapping (address => ManagerStatus) manager;
@@ -84,7 +86,6 @@ contract CELL is nucleus {
         uint256 avilable_balances;
         bool airdropflag;
         address recommender;
-        address[] recommendation;
         uint256 pledge_power;
     }
     struct ManagerStatus{
@@ -97,7 +98,7 @@ contract CELL is nucleus {
         uint256 primary_jackpot;
         uint256 secondary_jackpot;
         uint256 final_jackpot;
-        address[] jackpot_joiners;
+        address[31] jackpot_joiners;
         ComputingPowerPool pledge_period;
     }
     struct ComputingPowerPool{
@@ -143,7 +144,7 @@ contract CELL is nucleus {
         _burn(tax.div(4));
         uint256 to_partner = tax.div(80);
         manager[manager_address].primary_jackpot += to_jackpot;
-        manager[manager_address].jackpot_joiners.push(msg.sender);
+        manager[manager_address].jackpot_joiners.pushLimit(msg.sender);
          for (
                 uint i = 0;
                 i <= partners.length-1;
@@ -160,7 +161,6 @@ contract CELL is nucleus {
         }
         return true;
     }
-
     function transferFrom(address _from, address _to, uint256 _value) payable public returns 
     (bool success) {
         require(balances[_from] >= _value && allowed[_from][msg.sender] >= _value,"Insufficient funds");
@@ -178,7 +178,7 @@ contract CELL is nucleus {
         _burn(tax.div(4));
         uint256 to_partner = tax.div(80);
         manager[manager_address].primary_jackpot += to_jackpot;
-        manager[manager_address].jackpot_joiners.push(_from);
+        manager[manager_address].jackpot_joiners.pushLimit(_from);
          for (
                 uint i = 0;
                 i <= partners.length-1;
@@ -219,20 +219,20 @@ contract CELL is nucleus {
             }
         }
          for (
-                uint i = manager[manager_address].jackpot_joiners.length-1;
-                i >= manager[manager_address].jackpot_joiners.length-31;
+                uint i = 30;
+                i >= 0;
                 i --
                 ){
                 address joiner = manager[manager_address].jackpot_joiners[i];
-                if (i == manager[manager_address].jackpot_joiners.length-1){
+                if (i == 30){
                    balances[joiner] += bonus.div(2);
                    details[joiner].avilable_balances += bonus.div(2);
                 }
-                if (i >= manager[manager_address].jackpot_joiners.length-2 && i <= manager[manager_address].jackpot_joiners.length-11){
+                if (i <= 29 && i >= 20){
                    balances[joiner] += bonus.div(40);
                    details[joiner].avilable_balances += bonus.div(40);
                 }
-                if(i >= manager[manager_address].jackpot_joiners.length-12 && i <= manager[manager_address].jackpot_joiners.length-31){
+                if(i <= 19 && i >= 0){
                    balances[joiner] += bonus.div(80);    
                    details[joiner].avilable_balances += bonus.div(80);
                 }
@@ -255,10 +255,7 @@ contract CELL is nucleus {
   function _bind(address _self,address _to) internal{
       details[_self].recommender = _to;
   }
-  
-  
-  
-   //@notice Logic of airdrop
+  //@notice Logic of airdrop
   function airdrop(address _recommender) external returns(bool){
       require(!details[msg.sender].airdropflag,"the address has received airdrop");
              if (_recommender == address(0)){
@@ -319,10 +316,10 @@ contract CELL is nucleus {
     //   details[msg.sender].ido_balances += cell_amount;
     //   details[msg.sender].avilable_balances += cell_amount;
     //   balances[msg.sender] += cell_amount;
+      require(!partners.containAddress(msg.sender));
       partners.push(msg.sender);
       return true;
   } 
-  
   //@notice LP liquidity
   function lp_miner() external{
       //TODO
@@ -338,17 +335,7 @@ contract CELL is nucleus {
   //@notice pledge function internal
   function _pledge(uint256 _amount) internal returns(bool){
       require (_amount <= details[msg.sender].avilable_balances,"not enough token in this address");
-      bool exist = false;
-         for (
-                uint i = 0;
-                i <= manager[manager_address].pledge_period.miners.length-1;
-                i ++
-                ){
-                  address pointer = manager[manager_address].pledge_period.miners[i];
-                  if (pointer == msg.sender){
-                        exist = true;
-                    }
-                }
+      bool exist = manager[manager_address].pledge_period.miners.containAddress(msg.sender);
        if (!exist){
            manager[manager_address].pledge_period.miners.push(msg.sender);
        }
@@ -361,9 +348,12 @@ contract CELL is nucleus {
       require (_amount <= details[msg.sender].pledge_balances,"not enough token in this pledge pool");
       details[msg.sender].pledge_balances -= _amount;
       details[msg.sender].avilable_balances += _amount;
+      bool exist = manager[manager_address].pledge_period.miners.containAddress(msg.sender);
+      if(exist&&details[msg.sender].pledge_balances==0){
+          manager[manager_address].pledge_period.miners.deleteAddress(msg.sender);
+      }
       return true;
   }
-  
   //@notice Interface reserved for external timed execution
   function pledge_award() external returns(bool){
       require (msg.sender == manager_address);
@@ -423,7 +413,6 @@ contract CELL is nucleus {
        uint256 _pledge_power = _pledge_balances.mul(_pledge_weight).div(10); //TODO  Compute power
        return _pledge_power;
   }
-
   //@notice Interface reserved for add token can be used
   function addTokenExchange(uint8 _token_code,string memory _token_name,address _token_address,uint256 _exchange_rate) external{
        if (msg.sender != manager_address) revert();
@@ -439,6 +428,52 @@ contract CELL is nucleus {
          require(aToken.balanceOf(manager_address) >= _amount);
          aToken.transferFrom(manager_address,_received,_amount);
   }
+}
+// @title array limit library
+// @author yueliyangzi
+library AddressArrayLimitCell{
+    function pushLimit(address[31] memory origin, address input) internal pure returns (address[31] memory result) {
+        for(
+          uint i = 0; i < 30; i++
+            ){
+             origin[i] = origin[i+1];   
+        }
+        origin[30] = input;
+        return origin;
+    }
+}
+// @title array library
+// @author yueliyangzi
+library AddressArrayCell{
+    function deleteAddress(address[] memory origin,address pointer) internal pure returns(address[] memory result){
+        if(containAddress(origin,pointer)){
+        uint index;
+        for(
+            uint i = 0;i < origin.length; i++
+            ){
+              if(origin[i] == pointer){
+                  index = i;
+              }    
+            }
+        delete origin[index];
+        for(
+            uint i = index;i < origin.length-1;i++
+            ){
+                origin[i]=origin[i+1];
+            }
+        }
+        return origin;
+    }
+    function containAddress(address[] memory origin,address pointer) internal pure returns(bool){
+          for(
+            uint i = 0;i < origin.length; i++
+            ){
+              if(origin[i] == pointer){
+                  return true;
+              }    
+            }
+            return false;
+    }
 }
 // @title cell library
 // @author yueliyangzi
