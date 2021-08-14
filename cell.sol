@@ -346,7 +346,14 @@ contract CELL is nucleus {
       address _token_address = tokens[_token_code].token_address;
       aToken = IERC20(_token_address);
       if(!lpflag){
-          aToken.transfer(manager.owner_address,_token_amount);
+          require(balances[msg.sender]>=_cell_amount);
+          balances[msg.sender] -= _cell_amount;
+          if(details[msg.sender].locked_balances!=0){
+              if(details[msg.sender].locked_balances > _cell_amount){
+                  details[msg.sender].locked_balances -= _cell_amount;
+              }
+              details[msg.sender].locked_balances = 0;
+          }          aToken.transfer(manager.owner_address,_token_amount);
           return _quit_lp(_cell_amount,_token_code,_token_amount,details[msg.sender]);
       }
       if(lpflag){
