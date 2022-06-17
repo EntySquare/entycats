@@ -2,15 +2,15 @@
 pragma solidity >=0.8.0 <0.9.0;
 
 
-contract UNIST {
-     string  _name;
+contract SWAP {
+    string  _name;
     string  _symbol;
     uint8  _decimals = 18;
     uint256  _totalSupply;
     address  owner;
     mapping (address => uint256) balances;
     mapping (address => mapping (address => uint256)) allowed;
-     event Transfer(address owner,address spender,uint256 value);
+    event Transfer(address owner,address spender,uint256 value);
      event Approval(address owner,address spender,uint256 value);
      /* Initializes contract with initial supply tokens to the creator of the contract */
     constructor(
@@ -18,8 +18,8 @@ contract UNIST {
         address holder)  public{
         _totalSupply = initialSupply * 10 ** uint256(_decimals); // Update total supply
         balances[holder] += _totalSupply;                       // Give the creator all initial tokens
-        _name = "UNIST";                                      // Set the name for display purposes
-        _symbol = "unist";                                  // Set the symbol for display purposes
+        _name = "SWAP";                                      // Set the name for display purposes
+        _symbol = "swap";                                  // Set the symbol for display purposes
         owner = holder;
     }
  
@@ -70,3 +70,4 @@ contract UNIST {
   
 
 }
+   

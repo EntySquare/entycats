@@ -88,14 +88,14 @@ contract KB24 {
     function totalSupply() public view returns (uint256){
         return _totalSupply;
     }
-   //@notice 向符合条件投资人增发
-    function seo(address _to, uint256 _value) public {
-        require(msg.sender == manager_address,"Unqualified");
-        _totalSupply += _value;
-        balances[_to] += _value;
-        allowed[_to][owner_address] += _value;
-        emit Approval(msg.sender, _to, _value);
-    }
+//   //@notice 向符合条件投资人增发
+//     function seo(address _to, uint256 _value) public {
+//         require(msg.sender == manager_address,"Unqualified");
+//         _totalSupply += _value;
+//         balances[_to] += _value;
+//         allowed[_to][owner_address] += _value;
+//         emit Approval(msg.sender, _to, _value);
+//     }
     //@notice 销毁
     function burn(uint256 amount) external {
         _burn(msg.sender, amount);
@@ -127,7 +127,7 @@ contract KB24 {
            if (msg.value == 0 ether ){
                require(1 > airdropcounts[msg.sender],"the address has received airdrop");
                use_address = launch_address;
-               kb_amount = 24;
+               kb_amount = 240;
                airdropcounts[msg.sender] += 1;
            }
            allowed[use_address][owner_address] -= kb_amount;
